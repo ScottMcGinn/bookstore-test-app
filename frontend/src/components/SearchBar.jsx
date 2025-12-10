@@ -53,6 +53,7 @@ function SearchBar({ onSearch }) {
             onKeyPress={handleKeyPress}
             className="search-input"
             data-testid="search-input"
+            aria-label="Search books by title or description"
           />
         </div>
 
@@ -62,6 +63,7 @@ function SearchBar({ onSearch }) {
             onChange={(e) => setCategory(e.target.value)}
             className="filter-select"
             data-testid="category-filter"
+            aria-label="Filter books by category"
           >
             <option value="">All Categories</option>
             {categories.slice(1).map(cat => (
@@ -77,6 +79,7 @@ function SearchBar({ onSearch }) {
             onKeyPress={handleKeyPress}
             className="filter-input"
             data-testid="author-filter"
+            aria-label="Filter books by author name"
           />
         </div>
       </div>
@@ -86,6 +89,7 @@ function SearchBar({ onSearch }) {
           onClick={handleSearch}
           className="btn-search"
           data-testid="search-button"
+          aria-label="Execute search with current filters"
         >
           🔍 Search
         </button>
@@ -93,6 +97,7 @@ function SearchBar({ onSearch }) {
           onClick={handleReset}
           className="btn-reset"
           data-testid="reset-button"
+          aria-label="Clear all search and filter fields"
         >
           Reset
         </button>

@@ -13,19 +13,27 @@ function BookList({ books, onBookClick }) {
   }
 
   return (
-    <div className="book-list">
+    <div className="book-list" role="region" aria-label="List of available books">
       {books.map((book) => (
         <div 
           key={book.id} 
           className="book-card"
           onClick={() => onBookClick(book)}
           data-testid={`book-card-${book.id}`}
+          role="button"
+          tabIndex={0}
+          aria-label={`${book.title} by ${book.author}, $${book.price.toFixed(2)}`}
+          onKeyPress={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              onBookClick(book);
+            }
+          }}
         >
           <div className="book-card-image">
             {book.coverImage ? (
-              <img src={book.coverImage} alt={book.title} />
+              <img src={book.coverImage} alt={`Cover of ${book.title}`} />
             ) : (
-              <div className="book-placeholder">📖</div>
+              <div className="book-placeholder" aria-label="No cover image available">📖</div>
             )}
           </div>
           
@@ -42,7 +50,7 @@ function BookList({ books, onBookClick }) {
             
             <div className="book-footer">
               <span className="book-price">${book.price.toFixed(2)}</span>
-              <span className={`book-stock ${book.stock > 0 ? 'in-stock' : 'out-of-stock'}`}>
+              <span className={`book-stock ${book.stock > 0 ? 'in-stock' : 'out-of-stock'}`} aria-live="polite">
                 {book.stock > 0 ? `${book.stock} in stock` : 'Out of stock'}
               </span>
             </div>
@@ -58,6 +66,7 @@ function BookList({ books, onBookClick }) {
               }}
               disabled={book.stock <= 0}
               data-testid={`add-to-cart-${book.id}`}
+              aria-label={`Add ${book.title} to shopping cart${book.stock <= 0 ? ' (out of stock)' : ''}`}
             >
               🛒 Add to Cart
             </button>

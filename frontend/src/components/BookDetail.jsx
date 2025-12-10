@@ -38,9 +38,9 @@ function BookDetail({ book, onClose, onDelete, onUpdate }) {
   };
 
   return (
-    <div className="book-detail-overlay" onClick={onClose}>
+    <div className="book-detail-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="book-title">
       <div className="book-detail" onClick={(e) => e.stopPropagation()}>
-        <button className="close-btn" onClick={onClose}>×</button>
+        <button className="close-btn" onClick={onClose} aria-label="Close book details">×</button>
         
         <div className="book-detail-content">
           <div className="book-detail-image">
@@ -54,7 +54,7 @@ function BookDetail({ book, onClose, onDelete, onUpdate }) {
           <div className="book-detail-info">
             {!isEditing ? (
               <>
-                <h2>{book.title}</h2>
+                <h2 id="book-title">{book.title}</h2>
                 <p className="detail-author">by {book.author}</p>
                 
                 <div className="detail-meta">
@@ -96,7 +96,7 @@ function BookDetail({ book, onClose, onDelete, onUpdate }) {
                 </div>
 
                 <div className="detail-actions">
-                  <button className="btn-edit" onClick={() => setIsEditing(true)}>
+                  <button className="btn-edit" onClick={() => setIsEditing(true)} aria-label={`Edit book: ${book.title}`}>
                     Edit Book
                   </button>
                   <button 
@@ -108,10 +108,11 @@ function BookDetail({ book, onClose, onDelete, onUpdate }) {
                       }
                     }}
                     disabled={book.stock <= 0}
+                    aria-label={`Add ${book.title} to shopping cart${book.stock > 0 ? `, ${book.stock} available` : ', currently out of stock'}`}
                   >
                     🛒 Add to Cart
                   </button>
-                  <button className="btn-delete" onClick={() => onDelete(book.id)}>
+                  <button className="btn-delete" onClick={() => onDelete(book.id)} aria-label={`Delete book: ${book.title}`}>
                     Delete Book
                   </button>
                 </div>
@@ -121,63 +122,73 @@ function BookDetail({ book, onClose, onDelete, onUpdate }) {
                 <h2>Edit Book</h2>
                 
                 <div className="form-group">
-                  <label>Title</label>
+                  <label htmlFor="edit-title">Title</label>
                   <input 
+                    id="edit-title"
                     type="text"
                     name="title"
                     value={editForm.title}
                     onChange={handleInputChange}
+                    aria-label="Book title"
                   />
                 </div>
 
                 <div className="form-group">
-                  <label>Author</label>
+                  <label htmlFor="edit-author">Author</label>
                   <input 
+                    id="edit-author"
                     type="text"
                     name="author"
                     value={editForm.author}
                     onChange={handleInputChange}
+                    aria-label="Author name"
                   />
                 </div>
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Price ($)</label>
+                    <label htmlFor="edit-price">Price ($)</label>
                     <input 
+                      id="edit-price"
                       type="number"
                       name="price"
                       step="0.01"
                       value={editForm.price}
                       onChange={handleInputChange}
+                      aria-label="Book price in dollars"
                     />
                   </div>
 
                   <div className="form-group">
-                    <label>Stock</label>
+                    <label htmlFor="edit-stock">Stock</label>
                     <input 
+                      id="edit-stock"
                       type="number"
                       name="stock"
                       value={editForm.stock}
                       onChange={handleInputChange}
+                      aria-label="Number of copies in stock"
                     />
                   </div>
                 </div>
 
                 <div className="form-group">
-                  <label>Description</label>
+                  <label htmlFor="edit-description">Description</label>
                   <textarea 
+                    id="edit-description"
                     name="description"
                     rows="4"
                     value={editForm.description}
                     onChange={handleInputChange}
+                    aria-label="Book description"
                   />
                 </div>
 
                 <div className="edit-actions">
-                  <button className="btn-save" onClick={handleSave}>
+                  <button className="btn-save" onClick={handleSave} aria-label="Save book changes">
                     Save Changes
                   </button>
-                  <button className="btn-cancel" onClick={handleCancel}>
+                  <button className="btn-cancel" onClick={handleCancel} aria-label="Cancel editing">
                     Cancel
                   </button>
                 </div>

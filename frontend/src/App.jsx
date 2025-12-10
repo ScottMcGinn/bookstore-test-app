@@ -121,20 +121,22 @@ function App() {
 
   return (
     <div className="app">
-      <header className="app-header">
+      <header className="app-header" role="banner">
         <div className="header-content">
           <h1>📚 Bookstore</h1>
           <p className="subtitle">Test Automation Practice Application</p>
         </div>
-        <div className="header-buttons">
+        <div className="header-buttons" role="toolbar" aria-label="Application controls">
           <button 
             className="cart-btn"
             onClick={() => setShowCart(!showCart)}
             data-testid="cart-btn"
+            aria-label={`Shopping cart with ${getTotalItems()} items`}
+            aria-pressed={showCart}
           >
             🛒 Cart
             {getTotalItems() > 0 && (
-              <span className="cart-badge" data-testid="cart-badge">
+              <span className="cart-badge" data-testid="cart-badge" aria-hidden="false">
                 {getTotalItems()}
               </span>
             )}
@@ -142,15 +144,17 @@ function App() {
           <button 
             className="add-book-btn"
             onClick={() => setShowAddForm(!showAddForm)}
+            aria-label={showAddForm ? 'Close add book form' : 'Open form to add a new book'}
+            aria-pressed={showAddForm}
           >
             {showAddForm ? 'Cancel' : '+ Add Book'}
           </button>
         </div>
       </header>
 
-      <main className="app-main">
+      <main className="app-main" role="main" aria-label="Main content">
         {showAddForm && (
-          <div className="add-book-section">
+          <div className="add-book-section" role="region" aria-labelledby="add-form-title">
             <AddBookForm 
               onSubmit={handleAddBook}
               onCancel={() => setShowAddForm(false)}
@@ -161,16 +165,16 @@ function App() {
         <SearchBar onSearch={handleSearch} />
 
         {loading && (
-          <div className="loading">
+          <div className="loading" role="status" aria-live="polite" aria-label="Loading content">
             <div className="spinner"></div>
             <p>Loading books...</p>
           </div>
         )}
 
         {error && (
-          <div className="error-message">
+          <div className="error-message" role="alert">
             <p>⚠️ {error}</p>
-            <button onClick={() => fetchBooks()}>Retry</button>
+            <button onClick={() => fetchBooks()} aria-label="Retry loading books">Retry</button>
           </div>
         )}
 

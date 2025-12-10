@@ -157,20 +157,20 @@ function Checkout({ onClose, onOrderComplete }) {
   };
 
   return (
-    <div className="checkout-overlay" onClick={onClose}>
+    <div className="checkout-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="checkout-title">
       <div className="checkout-modal" onClick={(e) => e.stopPropagation()}>
-        <button className="checkout-close-btn" onClick={onClose}>×</button>
+        <button className="checkout-close-btn" onClick={onClose} aria-label="Close checkout">×</button>
 
         <div className="checkout-container">
           <div className="checkout-header">
-            <h2>Checkout</h2>
-            <div className="checkout-progress">
-              <div className={`progress-step ${currentStep === 'shipping' ? 'active' : ''}`}>
+            <h2 id="checkout-title">Checkout</h2>
+            <div className="checkout-progress" role="tablist" aria-label="Checkout steps">
+              <div className={`progress-step ${currentStep === 'shipping' ? 'active' : ''}`} role="tab" aria-selected={currentStep === 'shipping'} aria-controls="shipping-section">
                 <span className="step-number">1</span>
                 <span className="step-label">Shipping</span>
               </div>
               <div className="progress-line"></div>
-              <div className={`progress-step ${currentStep === 'payment' ? 'active' : ''}`}>
+              <div className={`progress-step ${currentStep === 'payment' ? 'active' : ''}`} role="tab" aria-selected={currentStep === 'payment'} aria-controls="payment-section">
                 <span className="step-number">2</span>
                 <span className="step-label">Payment</span>
               </div>
@@ -179,8 +179,8 @@ function Checkout({ onClose, onOrderComplete }) {
 
           <div className="checkout-body">
             {currentStep === 'shipping' && (
-              <div className="checkout-section">
-                <h3>Shipping Address</h3>
+              <div className="checkout-section" id="shipping-section" role="tabpanel" aria-labelledby="shipping-label">
+                <h3 id="shipping-label">Shipping Address</h3>
 
                 <div className="form-row">
                   <div className="form-group">
@@ -193,8 +193,11 @@ function Checkout({ onClose, onOrderComplete }) {
                       onChange={handleShippingChange}
                       placeholder="John"
                       className={errors.firstName ? 'error' : ''}
+                      aria-label="First name for shipping address"
+                      aria-invalid={!!errors.firstName}
+                      aria-describedby={errors.firstName ? 'firstName-error' : undefined}
                     />
-                    {errors.firstName && <span className="error-text">{errors.firstName}</span>}
+                    {errors.firstName && <span className="error-text" id="firstName-error">{errors.firstName}</span>}
                   </div>
 
                   <div className="form-group">
@@ -207,8 +210,11 @@ function Checkout({ onClose, onOrderComplete }) {
                       onChange={handleShippingChange}
                       placeholder="Doe"
                       className={errors.lastName ? 'error' : ''}
+                      aria-label="Last name for shipping address"
+                      aria-invalid={!!errors.lastName}
+                      aria-describedby={errors.lastName ? 'lastName-error' : undefined}
                     />
-                    {errors.lastName && <span className="error-text">{errors.lastName}</span>}
+                    {errors.lastName && <span className="error-text" id="lastName-error">{errors.lastName}</span>}
                   </div>
                 </div>
 
@@ -223,8 +229,11 @@ function Checkout({ onClose, onOrderComplete }) {
                       onChange={handleShippingChange}
                       placeholder="john@example.com"
                       className={errors.email ? 'error' : ''}
+                      aria-label="Email address for shipping notifications"
+                      aria-invalid={!!errors.email}
+                      aria-describedby={errors.email ? 'email-error' : undefined}
                     />
-                    {errors.email && <span className="error-text">{errors.email}</span>}
+                    {errors.email && <span className="error-text" id="email-error">{errors.email}</span>}
                   </div>
 
                   <div className="form-group">
@@ -237,8 +246,11 @@ function Checkout({ onClose, onOrderComplete }) {
                       onChange={handleShippingChange}
                       placeholder="(123) 456-7890"
                       className={errors.phone ? 'error' : ''}
+                      aria-label="Phone number for delivery contact"
+                      aria-invalid={!!errors.phone}
+                      aria-describedby={errors.phone ? 'phone-error' : undefined}
                     />
-                    {errors.phone && <span className="error-text">{errors.phone}</span>}
+                    {errors.phone && <span className="error-text" id="phone-error">{errors.phone}</span>}
                   </div>
                 </div>
 
@@ -252,8 +264,11 @@ function Checkout({ onClose, onOrderComplete }) {
                     onChange={handleShippingChange}
                     placeholder="123 Main Street"
                     className={errors.address ? 'error' : ''}
+                    aria-label="Street address for delivery"
+                    aria-invalid={!!errors.address}
+                    aria-describedby={errors.address ? 'address-error' : undefined}
                   />
-                  {errors.address && <span className="error-text">{errors.address}</span>}
+                  {errors.address && <span className="error-text" id="address-error">{errors.address}</span>}
                 </div>
 
                 <div className="form-row">
@@ -267,8 +282,11 @@ function Checkout({ onClose, onOrderComplete }) {
                       onChange={handleShippingChange}
                       placeholder="New York"
                       className={errors.city ? 'error' : ''}
+                      aria-label="City for shipping address"
+                      aria-invalid={!!errors.city}
+                      aria-describedby={errors.city ? 'city-error' : undefined}
                     />
-                    {errors.city && <span className="error-text">{errors.city}</span>}
+                    {errors.city && <span className="error-text" id="city-error">{errors.city}</span>}
                   </div>
 
                   <div className="form-group">
@@ -281,8 +299,11 @@ function Checkout({ onClose, onOrderComplete }) {
                       onChange={handleShippingChange}
                       placeholder="NY"
                       className={errors.state ? 'error' : ''}
+                      aria-label="State or province for shipping address"
+                      aria-invalid={!!errors.state}
+                      aria-describedby={errors.state ? 'state-error' : undefined}
                     />
-                    {errors.state && <span className="error-text">{errors.state}</span>}
+                    {errors.state && <span className="error-text" id="state-error">{errors.state}</span>}
                   </div>
 
                   <div className="form-group">
@@ -295,8 +316,11 @@ function Checkout({ onClose, onOrderComplete }) {
                       onChange={handleShippingChange}
                       placeholder="10001"
                       className={errors.zipCode ? 'error' : ''}
+                      aria-label="ZIP or postal code for shipping address"
+                      aria-invalid={!!errors.zipCode}
+                      aria-describedby={errors.zipCode ? 'zipCode-error' : undefined}
                     />
-                    {errors.zipCode && <span className="error-text">{errors.zipCode}</span>}
+                    {errors.zipCode && <span className="error-text" id="zipCode-error">{errors.zipCode}</span>}
                   </div>
                 </div>
 
@@ -310,15 +334,18 @@ function Checkout({ onClose, onOrderComplete }) {
                     onChange={handleShippingChange}
                     placeholder="United States"
                     className={errors.country ? 'error' : ''}
+                    aria-label="Country for shipping address"
+                    aria-invalid={!!errors.country}
+                    aria-describedby={errors.country ? 'country-error' : undefined}
                   />
-                  {errors.country && <span className="error-text">{errors.country}</span>}
+                  {errors.country && <span className="error-text" id="country-error">{errors.country}</span>}
                 </div>
               </div>
             )}
 
             {currentStep === 'payment' && (
-              <div className="checkout-section">
-                <h3>Payment Information</h3>
+              <div className="checkout-section" id="payment-section" role="tabpanel" aria-labelledby="payment-label">
+                <h3 id="payment-label">Payment Information</h3>
 
                 <div className="form-group">
                   <label htmlFor="cardNumber">Credit Card Number *</label>
@@ -331,8 +358,11 @@ function Checkout({ onClose, onOrderComplete }) {
                     placeholder="#### #### #### ####"
                     maxLength="19"
                     className={errors.cardNumber ? 'error' : ''}
+                    aria-label="16-digit credit card number"
+                    aria-invalid={!!errors.cardNumber}
+                    aria-describedby={errors.cardNumber ? 'cardNumber-error' : undefined}
                   />
-                  {errors.cardNumber && <span className="error-text">{errors.cardNumber}</span>}
+                  {errors.cardNumber && <span className="error-text" id="cardNumber-error">{errors.cardNumber}</span>}
                 </div>
 
                 <div className="form-row">
@@ -347,8 +377,11 @@ function Checkout({ onClose, onOrderComplete }) {
                       placeholder="##/##"
                       maxLength="5"
                       className={errors.expiryDate ? 'error' : ''}
+                      aria-label="Credit card expiration date in MM/YY format"
+                      aria-invalid={!!errors.expiryDate}
+                      aria-describedby={errors.expiryDate ? 'expiryDate-error' : undefined}
                     />
-                    {errors.expiryDate && <span className="error-text">{errors.expiryDate}</span>}
+                    {errors.expiryDate && <span className="error-text" id="expiryDate-error">{errors.expiryDate}</span>}
                   </div>
 
                   <div className="form-group">
@@ -362,8 +395,11 @@ function Checkout({ onClose, onOrderComplete }) {
                       placeholder="###"
                       maxLength="3"
                       className={errors.cvv ? 'error' : ''}
+                      aria-label="3-digit security code on back of credit card"
+                      aria-invalid={!!errors.cvv}
+                      aria-describedby={errors.cvv ? 'cvv-error' : undefined}
                     />
-                    {errors.cvv && <span className="error-text">{errors.cvv}</span>}
+                    {errors.cvv && <span className="error-text" id="cvv-error">{errors.cvv}</span>}
                   </div>
                 </div>
 
@@ -374,9 +410,9 @@ function Checkout({ onClose, onOrderComplete }) {
             )}
 
             {/* Order Summary */}
-            <div className="checkout-summary">
+            <div className="checkout-summary" role="region" aria-label="Order summary">
               <h4>Order Summary</h4>
-              <div className="summary-items">
+              <div className="summary-items" aria-live="polite" aria-label={`${cartItems.length} items in order`}>
                 {cartItems.map(item => (
                   <div key={item.id} className="summary-item">
                     <span className="item-name">{item.title}</span>
@@ -385,7 +421,7 @@ function Checkout({ onClose, onOrderComplete }) {
                   </div>
                 ))}
               </div>
-              <div className="summary-total">
+              <div className="summary-total" aria-live="polite" aria-label={`Order total: $${getTotalPrice().toFixed(2)}`}>
                 <span>Total:</span>
                 <span className="total-price">${getTotalPrice().toFixed(2)}</span>
               </div>
@@ -395,18 +431,20 @@ function Checkout({ onClose, onOrderComplete }) {
           <div className="checkout-footer">
             {currentStep === 'shipping' && (
               <>
-                <button className="btn-cancel" onClick={onClose}>Cancel</button>
-                <button className="btn-next" onClick={handleNextStep}>Continue to Payment</button>
+                <button className="btn-cancel" onClick={onClose} aria-label="Cancel checkout and return to shopping">Cancel</button>
+                <button className="btn-next" onClick={handleNextStep} aria-label="Complete shipping information and proceed to payment">Continue to Payment</button>
               </>
             )}
 
             {currentStep === 'payment' && (
               <>
-                <button className="btn-back" onClick={() => setCurrentStep('shipping')}>Back</button>
+                <button className="btn-back" onClick={() => setCurrentStep('shipping')} aria-label="Return to shipping information">Back</button>
                 <button
                   className="btn-submit"
                   onClick={handleSubmitOrder}
                   disabled={isSubmitting}
+                  aria-label={isSubmitting ? 'Processing order, please wait' : 'Complete purchase and place order'}
+                  aria-busy={isSubmitting}
                 >
                   {isSubmitting ? 'Processing...' : 'Place Order'}
                 </button>

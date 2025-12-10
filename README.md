@@ -305,27 +305,6 @@ To reset the database to its initial state, restore the original content of `bac
 ### Books not updating
 **Solution**: Check that both frontend and backend are running and can communicate
 
-## 🤝 Contributing
-
-This is a practice project for test automation. Contributions are welcome!
-
-### How to Contribute
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/new-feature`)
-3. Commit your changes (`git commit -m 'Add new feature'`)
-4. Push to the branch (`git push origin feature/new-feature`)
-5. Open a Pull Request
-
-### Ideas for Contributions
-- Add authentication
-- Add shopping cart functionality
-- Add user reviews and ratings
-- Add book categories management
-- Add SQLite database option
-- Add Docker configuration
-- Add automated tests
-- Add CI/CD pipeline
-
 ## 📝 Test Automation Ideas
 
 Here are some test cases you can automate:

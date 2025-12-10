@@ -20,13 +20,45 @@ This application is specifically designed for software testers to practice:
 - JSON file-based database (easy to reset)
 - Comprehensive error handling
 
-### Frontend
-- Modern React interface
-- Responsive design (mobile, tablet, desktop)
+### Frontend - Book Management
+- Modern React interface with responsive design (mobile, tablet, desktop)
 - Book browsing with grid layout
-- Advanced search and filtering
+- Advanced search and filtering by title, author, and category
 - Add, edit, and delete books
-- Modal-based book details
+- Modal-based book details with full information display
+- Stock availability indicators
+
+### Frontend - Shopping Cart
+- Add books to cart from book list or detail view
+- Real-time cart badge showing item count
+- Side cart panel with:
+  - Item quantity controls
+  - Individual item removal
+  - Subtotal calculations
+  - Clear cart option
+  - Continue shopping button
+
+### Frontend - Checkout & Payment Processing
+- **Two-step checkout process:**
+  1. **Shipping Information** - Collect customer details (name, email, phone, address, city, state, zip, country)
+  2. **Payment Information** - Collect credit card details with smart formatting
+- **Payment Input Formatting:**
+  - Credit Card: `#### #### #### ####` (auto-formats with spaces)
+  - Expiry Date: `##/##` (MM/YY format with auto-formatting)
+  - CVV: `###` (3 digits only)
+- **Form Validation:**
+  - Required field validation
+  - Email format validation
+  - Credit card length validation
+  - Real-time error messages
+- **Order Confirmation Page:**
+  - Thank you message
+  - Auto-generated order number
+  - Order details summary
+  - Shipping and billing information
+  - Itemized order breakdown
+  - Confirmation email notification
+  - Link back to home page
 
 ## 📁 Project Structure
 
@@ -40,8 +72,19 @@ bookstore-test-app/
 ├── frontend/            # React application
 │   ├── src/
 │   │   ├── components/  # React components
+│   │   │   ├── BookList.jsx          # Book grid display
+│   │   │   ├── BookDetail.jsx        # Book details modal
+│   │   │   ├── SearchBar.jsx         # Search and filter
+│   │   │   ├── AddBookForm.jsx       # Add/edit book form
+│   │   │   ├── Cart.jsx              # Shopping cart panel
+│   │   │   ├── Checkout.jsx          # Checkout modal (2-step)
+│   │   │   └── OrderConfirmation.jsx # Order confirmation page
+│   │   ├── context/     # React Context
+│   │   │   └── CartContext.jsx       # Global cart state
 │   │   ├── services/    # API service layer
-│   │   └── App.jsx      # Main app component
+│   │   │   └── bookService.js        # API calls
+│   │   ├── App.jsx      # Main app component
+│   │   └── main.jsx     # Entry point with CartProvider
 │   └── vite.config.js   # Vite configuration
 └── README.md            # This file
 ```
@@ -135,28 +178,51 @@ curl -X POST http://localhost:3001/api/books \
 This application is designed with various testing scenarios in mind:
 
 ### API Testing
-- Test CRUD operations
+- Test CRUD operations for books
 - Validate request/response formats
 - Test error handling (404, 400, 500)
 - Test query parameters and filtering
 - Verify data persistence
 
-### UI Testing
-- Test search functionality
-- Test filtering (category, author)
-- Test form validation
+### UI Testing - Book Management
+- Test search functionality with various keywords
+- Test filtering by category and author
+- Test form validation (empty fields, invalid data)
 - Test CRUD operations through UI
-- Test responsive design
+- Test responsive design across devices
+
+### UI Testing - Shopping Cart
+- Add single and multiple books to cart
+- Update item quantities
+- Remove individual items from cart
+- Clear entire cart
+- Verify cart badge updates correctly
+- Check total price calculations
+- Continue shopping after viewing cart
+
+### UI Testing - Checkout & Payment
+- Complete checkout flow from start to finish
+- Validate shipping information form
+- Verify form field validation and error messages
+- Test payment information input formatting
+- Validate credit card, expiry, and CVV inputs
+- Complete order placement
+- Verify order confirmation page displays correctly
+- Confirm "Back to Home" navigation works
+- Verify cart is cleared after successful order
 
 ### End-to-End Testing
-- Complete user workflows
-- Book creation flow
-- Search → View → Edit → Delete flow
-- Error state handling
+- Complete shopping workflow: Browse → Search → Add to Cart → Checkout → Confirmation
+- Book management flow: Create → View → Edit → Delete
+- Error state handling throughout application
+- Navigation between all application sections
+- Responsive behavior on different screen sizes
 
 ### Performance Testing
 - API response times
 - Frontend load times
+- Cart performance with many items
+- Checkout form responsiveness
 - Concurrent user handling
 
 ## 🔧 Configuration
@@ -217,9 +283,10 @@ To reset the database to its initial state, restore the original content of `bac
 - **CORS** - Cross-origin resource sharing
 
 ### Frontend
-- **React 18** - UI library
+- **React 18** - UI library with Hooks
+- **React Context API** - State management
 - **Vite** - Build tool and dev server
-- **Vanilla CSS** - Styling
+- **Vanilla CSS** - Styling with responsive design
 
 ## 🐛 Common Issues
 
@@ -263,16 +330,55 @@ This is a practice project for test automation. Contributions are welcome!
 
 Here are some test cases you can automate:
 
-1. **Verify all books load correctly**
+### Book Management
+1. **Verify all books load correctly on initial page load**
 2. **Test search functionality with various keywords**
-3. **Test category filtering**
-4. **Add a new book and verify it appears in the list**
-5. **Edit a book and verify changes persist**
-6. **Delete a book and verify it's removed**
-7. **Test form validation (empty fields, invalid data)**
-8. **Test API response codes (200, 201, 404, 400)**
-9. **Test pagination if you add it**
-10. **Performance test with multiple concurrent users**
+3. **Test category filtering with multiple categories**
+4. **Test author filtering**
+5. **Add a new book and verify it appears in the list**
+6. **Edit a book and verify changes persist**
+7. **Delete a book and verify it's removed**
+8. **Test form validation (empty fields, invalid data)**
+
+### Shopping Cart
+9. **Add single book to cart and verify badge updates**
+10. **Add multiple different books to cart**
+11. **Increase quantity of item in cart**
+12. **Remove item from cart and verify total updates**
+13. **Clear entire cart**
+14. **Verify cart items persist when navigating away and back**
+15. **Verify total price calculations are accurate**
+
+### Checkout & Payment
+16. **Complete full checkout flow from cart to confirmation**
+17. **Validate shipping form required field validation**
+18. **Test invalid email format rejection**
+19. **Verify credit card number formatting (spaces every 4 digits)**
+20. **Verify expiry date formatting (MM/YY)**
+21. **Verify CVV only accepts digits**
+22. **Test invalid credit card length rejection**
+23. **Complete order and verify confirmation page displays**
+24. **Verify order number is generated**
+25. **Verify order summary shows correct items and total**
+26. **Click "Back to Home" and verify cart is cleared**
+
+### API Testing
+27. **Test GET /api/books endpoint**
+28. **Test GET /api/books/:id endpoint**
+29. **Test POST /api/books with valid data**
+30. **Test POST /api/books with invalid data**
+31. **Test PUT /api/books/:id for updates**
+32. **Test DELETE /api/books/:id**
+33. **Test query parameters (?category=Fiction&author=...)**
+34. **Test API response codes (200, 201, 404, 400)**
+
+### UI/UX Testing
+35. **Test responsive design on mobile devices**
+36. **Test responsive design on tablets**
+37. **Test responsive design on desktop**
+38. **Test button hover states**
+39. **Test form input focus states**
+40. **Test modal close functionality**
 
 ## 📄 License
 

@@ -8,6 +8,7 @@ import Checkout from './components/Checkout';
 import OrderConfirmation from './components/OrderConfirmation';
 import LoginPage from './components/LoginPage';
 import RoleProtected from './components/RoleProtected';
+import CustomerProfile from './components/CustomerProfile';
 import { useCart } from './context/CartContext';
 import { useAuth } from './context/AuthContext';
 import bookService from './services/bookService';
@@ -23,6 +24,7 @@ function App() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [showCart, setShowCart] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
   const [orderData, setOrderData] = useState(null);
   const { getTotalItems } = useCart();
   const [filters, setFilters] = useState({
@@ -149,7 +151,18 @@ function App() {
           </div>
         </div>
         <div className="header-buttons" role="toolbar" aria-label="Application controls">
-          <RoleProtected allowedRoles={['customer']}>
+          <RoleProtected allowedRoles={['customer']} fallback={null}>
+            <button 
+              className="profile-btn"
+              onClick={() => setShowProfile(!showProfile)}
+              data-testid="profile-btn"
+              aria-label="View my profile"
+              aria-pressed={showProfile}
+            >
+              👤 Profile
+            </button>
+          </RoleProtected>
+          <RoleProtected allowedRoles={['customer']} fallback={null}>
             <button 
               className="cart-btn"
               onClick={() => setShowCart(!showCart)}
@@ -165,7 +178,7 @@ function App() {
               )}
             </button>
           </RoleProtected>
-          <RoleProtected allowedRoles={['admin', 'staff']}>
+          <RoleProtected allowedRoles={['admin', 'staff']} fallback={null}>
             <button 
               className="add-book-btn"
               onClick={() => setShowAddForm(!showAddForm)}
@@ -186,6 +199,21 @@ function App() {
       </header>
 
       <main className="app-main" role="main" aria-label="Main content">
+        {showProfile && (
+          <RoleProtected allowedRoles={['customer']}>
+            <div className="profile-section" role="region" aria-labelledby="profile-title">
+              <button 
+                className="close-btn"
+                onClick={() => setShowProfile(false)}
+                aria-label="Close profile"
+              >
+                ✕
+              </button>
+              <CustomerProfile />
+            </div>
+          </RoleProtected>
+        )}
+
         <RoleProtected allowedRoles={['admin', 'staff']}>
           {showAddForm && (
             <div className="add-book-section" role="region" aria-labelledby="add-form-title">

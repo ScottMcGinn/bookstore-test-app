@@ -16,7 +16,14 @@ const OrderHistory = () => {
         setLoading(true);
         setError(null);
         const data = await userService.getOrderHistory(user.id);
-        setOrders(data || []);
+        // Handle both array and object responses (object with orders property)
+        if (Array.isArray(data)) {
+          setOrders(data);
+        } else if (data && data.orders && Array.isArray(data.orders)) {
+          setOrders(data.orders);
+        } else {
+          setOrders([]);
+        }
       } catch (err) {
         console.error('Error fetching order history:', err);
         setError('Failed to load order history. Please try again later.');
@@ -87,27 +94,27 @@ const OrderHistory = () => {
       <div className="orders-list">
         {orders.map((order) => (
           <div
-            key={order.id}
-            className={`order-card ${expandedOrderId === order.id ? 'expanded' : ''}`}
+            key={order.orderId}
+            className={`order-card ${expandedOrderId === order.orderId ? 'expanded' : ''}`}
           >
             <div
               className="order-summary"
               role="button"
               tabIndex={0}
-              onClick={() => toggleOrderDetails(order.id)}
+              onClick={() => toggleOrderDetails(order.orderId)}
               onKeyPress={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
-                  toggleOrderDetails(order.id);
+                  toggleOrderDetails(order.orderId);
                 }
               }}
-              aria-expanded={expandedOrderId === order.id}
-              aria-controls={`order-details-${order.id}`}
+              aria-expanded={expandedOrderId === order.orderId}
+              aria-controls={`order-details-${order.orderId}`}
             >
               <div className="order-header">
                 <div className="order-info">
-                  <div className="order-id">Order #{order.id}</div>
-                  <div className="order-date">{formatDate(order.date)}</div>
+                  <div className="order-id">Order #{order.orderId}</div>
+                  <div className="order-date">{formatDate(order.orderDate)}</div>
                 </div>
                 <div className="order-total">
                   <span className="label">Total:</span>
@@ -122,8 +129,8 @@ const OrderHistory = () => {
               </div>
 
               <div className="order-items-preview">
-                {order.items && order.items.slice(0, 2).map((item, index) => (
-                  <span key={index} className="item-tag">
+                {order.items && order.items.slice(0, 2).map((item) => (
+                  <span key={item.bookId} className="item-tag">
                     {item.title}
                   </span>
                 ))}
@@ -136,20 +143,20 @@ const OrderHistory = () => {
 
               <button
                 className="toggle-btn"
-                aria-label={expandedOrderId === order.id ? 'Collapse order details' : 'Expand order details'}
+                aria-label={expandedOrderId === order.orderId ? 'Collapse order details' : 'Expand order details'}
               >
-                {expandedOrderId === order.id ? '▲' : '▼'}
+                {expandedOrderId === order.orderId ? '▲' : '▼'}
               </button>
             </div>
 
-            {expandedOrderId === order.id && (
-              <div id={`order-details-${order.id}`} className="order-details">
+            {expandedOrderId === order.orderId && (
+              <div id={`order-details-${order.orderId}`} className="order-details">
                 <div className="details-section">
                   <h4>Order Items</h4>
                   <div className="items-list">
                     {order.items && order.items.length > 0 ? (
-                      order.items.map((item, index) => (
-                        <div key={index} className="item-detail">
+                      order.items.map((item) => (
+                        <div key={item.bookId} className="item-detail">
                           <div className="item-name">
                             <div className="title">{item.title}</div>
                             <div className="author">{item.author}</div>
@@ -194,13 +201,13 @@ const OrderHistory = () => {
                 <div className="order-actions">
                   <button
                     className="btn-reorder"
-                    aria-label={`Reorder from order #${order.id}`}
+                    aria-label={`Reorder from order #${order.orderId}`}
                   >
                     Reorder
                   </button>
                   <button
                     className="btn-invoice"
-                    aria-label={`Download invoice for order #${order.id}`}
+                    aria-label={`Download invoice for order #${order.orderId}`}
                   >
                     Download Invoice
                   </button>

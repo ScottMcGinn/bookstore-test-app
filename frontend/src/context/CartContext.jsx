@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback, useMemo } from 'react';
 
 const CartContext = createContext();
 
@@ -31,7 +31,9 @@ export function CartProvider({ children }) {
 
   const updateQuantity = useCallback((bookId, quantity) => {
     if (quantity <= 0) {
-      removeFromCart(bookId);
+      setCartItems((prevItems) =>
+        prevItems.filter(item => item.id !== bookId)
+      );
       return;
     }
     
@@ -42,7 +44,7 @@ export function CartProvider({ children }) {
           : item
       )
     );
-  }, [removeFromCart]);
+  }, []);
 
   const clearCart = useCallback(() => {
     setCartItems([]);
@@ -56,7 +58,7 @@ export function CartProvider({ children }) {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
   }, [cartItems]);
 
-  const value = {
+  const value = useMemo(() => ({
     cartItems,
     addToCart,
     removeFromCart,
@@ -64,7 +66,7 @@ export function CartProvider({ children }) {
     clearCart,
     getTotalPrice,
     getTotalItems
-  };
+  }), [cartItems, addToCart, removeFromCart, updateQuantity, clearCart, getTotalPrice, getTotalItems]);
 
   return (
     <CartContext.Provider value={value}>

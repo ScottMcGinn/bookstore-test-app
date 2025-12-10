@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import BookList from './components/BookList';
 import BookDetail from './components/BookDetail';
 import SearchBar from './components/SearchBar';
@@ -12,6 +12,7 @@ import CustomerProfile from './components/CustomerProfile';
 import { useCart } from './context/CartContext';
 import { useAuth } from './context/AuthContext';
 import bookService from './services/bookService';
+import userService from './services/userService';
 import './App.css';
 
 function App() {
@@ -33,19 +34,22 @@ function App() {
     author: ''
   });
 
-  // Restore session on mount
-  useEffect(() => {
-    restoreSession();
-  }, [restoreSession]);
+  // Prevent duplicate fetch on mount
+  const hasFetchedRef = useRef(false);
+  
+  // Track session restoration to prevent infinite loop
+  const hasRestoredRef = useRef(false);
 
-  // Fetch books on component mount or when user logs in
+  // Restore session on mount (only once) - use ref to prevent render loop
   useEffect(() => {
-    if (user) {
-      fetchBooks();
+    if (!hasRestoredRef.current) {
+      hasRestoredRef.current = true;
+      restoreSession();
     }
-  }, [user]);
+  }, []);
 
-  const fetchBooks = async (filterParams = {}) => {
+  // Memoized fetch function to prevent re-creation on each render
+  const fetchBooks = useCallback(async (filterParams = {}) => {
     try {
       setLoading(true);
       setError(null);
@@ -58,7 +62,15 @@ function App() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  // Fetch books on component mount only (not when user changes)
+  useEffect(() => {
+    if (!hasFetchedRef.current) {
+      hasFetchedRef.current = true;
+      fetchBooks();
+    }
+  }, []);
 
   const handleSearch = (searchFilters) => {
     setFilters(searchFilters);
@@ -122,9 +134,45 @@ function App() {
     setShowCheckout(false);
   };
 
-  const handleOrderComplete = (order) => {
-    setOrderData(order);
-    setShowCheckout(false);
+  const handleOrderComplete = async (order) => {
+    try {
+      // Generate a unique order ID
+      const orderId = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      
+      // Transform order data to match backend schema
+      const orderToSave = {
+        orderId: orderId,
+        orderDate: order.orderDate,
+        total: order.total,
+        items: order.items.map(item => ({
+          bookId: item.id,
+          title: item.title,
+          author: item.author,
+          price: item.price,
+          quantity: item.quantity
+        })),
+        status: 'pending',
+        shippingAddress: {
+          street: order.shipping.address,
+          city: order.shipping.city,
+          state: order.shipping.state,
+          zipCode: order.shipping.zipCode,
+          country: order.shipping.country
+        }
+      };
+
+      // Save order to backend
+      await userService.addOrder(user.id, orderToSave);
+      
+      // Add orderId to order data for confirmation display
+      setOrderData({ ...order, orderId: orderId });
+      setShowCheckout(false);
+    } catch (error) {
+      console.error('Error saving order:', error);
+      // Still show confirmation but log the error
+      setOrderData(order);
+      setShowCheckout(false);
+    }
   };
 
   const handleBackToHome = () => {
@@ -200,7 +248,7 @@ function App() {
 
       <main className="app-main" role="main" aria-label="Main content">
         {showProfile && (
-          <RoleProtected allowedRoles={['customer']}>
+          <RoleProtected allowedRoles={['customer']} fallback={null}>
             <div className="profile-section" role="region" aria-labelledby="profile-title">
               <button 
                 className="close-btn"
@@ -214,7 +262,7 @@ function App() {
           </RoleProtected>
         )}
 
-        <RoleProtected allowedRoles={['admin', 'staff']}>
+        <RoleProtected allowedRoles={['admin', 'staff']} fallback={null}>
           {showAddForm && (
             <div className="add-book-section" role="region" aria-labelledby="add-form-title">
               <AddBookForm 
@@ -264,7 +312,7 @@ function App() {
         )}
 
         {showCart && (
-          <RoleProtected allowedRoles={['customer']}>
+          <RoleProtected allowedRoles={['customer']} fallback={null}>
             <Cart onClose={() => setShowCart(false)} onCheckout={handleCheckoutStart} />
           </RoleProtected>
         )}

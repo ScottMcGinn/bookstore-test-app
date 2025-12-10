@@ -74,6 +74,45 @@ This application is specifically designed for software testers to practice:
   - Confirmation email notification
   - Link back to home page
 
+### Frontend - Customer Profile & Order Management
+- **User Profile Modal** - Access via Profile button in header
+- **Three Profile Tabs:**
+  1. **Profile Info** - View and edit personal information
+     - Name, email, phone, address (city, state, zip, country)
+     - Edit button to update profile
+     - Persistent storage in backend
+  2. **Payment Methods** - Manage saved payment methods
+     - View saved credit cards
+     - Add new payment method
+     - Set default payment method
+     - Delete payment methods
+  3. **Order History** - Complete order tracking
+     - View all customer orders with status (pending, processing, shipped, delivered)
+     - Order summary card showing order number, date, total, items preview
+     - Expandable order details showing:
+       - Complete item list with quantities and prices
+       - Order summary with subtotal, shipping, tax, total
+       - Reorder button to quickly reorder items
+       - Download invoice button
+     - Real-time order updates from backend
+     - Proper date formatting (e.g., "December 10, 2025")
+
+### Backend - Order Management API
+- **Order CRUD Endpoints:**
+  - `GET /api/users/:id/orders` - Retrieve user's complete order history
+  - `POST /api/users/:id/orders` - Create new order with full details
+  - Orders stored with complete structure: orderId, orderDate, total, items, status, shippingAddress
+  - Automatic order persistence to backend database
+  - Order data includes book details (title, author, price, quantity)
+- **User Profile Endpoints:**
+  - `GET /api/users/:id/profile` - Get user profile information
+  - `PUT /api/users/:id/profile` - Update user profile
+- **Payment Methods Endpoints:**
+  - `GET /api/users/:id/payment-methods` - Get saved payment methods
+  - `POST /api/users/:id/payment-methods` - Save new payment method
+  - `DELETE /api/users/:id/payment-methods/:methodId` - Remove payment method
+
+
 ## 📁 Project Structure
 
 ```
@@ -98,12 +137,17 @@ bookstore-test-app/
 │   │   │   ├── Cart.jsx              # Shopping cart panel
 │   │   │   ├── Checkout.jsx          # Checkout modal (2-step)
 │   │   │   ├── OrderConfirmation.jsx # Order confirmation page
+│   │   │   ├── CustomerProfile.jsx   # User profile modal
+│   │   │   ├── ProfileInfo.jsx       # Profile information tab
+│   │   │   ├── PaymentMethods.jsx    # Payment methods management
+│   │   │   ├── OrderHistory.jsx      # Order history and tracking
 │   │   │   └── RoleProtected.jsx     # Role-based access wrapper
 │   │   ├── context/     # React Context
 │   │   │   ├── CartContext.jsx       # Global cart state
 │   │   │   └── AuthContext.jsx       # Global authentication state
 │   │   ├── services/    # API service layer
-│   │   │   └── bookService.js        # API calls
+│   │   │   ├── bookService.js        # Book API calls
+│   │   │   └── userService.js        # User profile, orders, payment API calls
 │   │   ├── App.jsx      # Main app component
 │   │   └── main.jsx     # Entry point with AuthProvider & CartProvider
 │   └── vite.config.js   # Vite configuration
@@ -167,6 +211,7 @@ The frontend will be running at: **http://localhost:5173**
 
 ## 📚 API Endpoints
 
+### Book Endpoints
 | Method | Endpoint | Description | Query Parameters |
 |--------|----------|-------------|------------------|
 | GET | `/api/books` | Get all books | `?category=Fiction&author=Tolkien&search=wizard` |
@@ -174,6 +219,26 @@ The frontend will be running at: **http://localhost:5173**
 | POST | `/api/books` | Create new book | - |
 | PUT | `/api/books/:id` | Update book | - |
 | DELETE | `/api/books/:id` | Delete book | - |
+
+### User Profile Endpoints
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/users/:id/profile` | Get user profile information |
+| PUT | `/api/users/:id/profile` | Update user profile |
+
+### Order Endpoints
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/users/:id/orders` | Get user's complete order history |
+| POST | `/api/users/:id/orders` | Create new order |
+
+### Payment Methods Endpoints
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/users/:id/payment-methods` | Get saved payment methods |
+| POST | `/api/users/:id/payment-methods` | Save new payment method |
+| DELETE | `/api/users/:id/payment-methods/:methodId` | Delete payment method |
+
 
 ### Sample API Request
 
@@ -231,6 +296,28 @@ This application is designed with various testing scenarios in mind:
 - Verify order confirmation page displays correctly
 - Confirm "Back to Home" navigation works
 - Verify cart is cleared after successful order
+
+### UI Testing - User Profile & Order Management
+- Access profile modal via Profile button
+- **Profile Info Tab:**
+  - View personal information
+  - Edit profile information
+  - Verify updates persist
+  - Test form validation
+- **Payment Methods Tab:**
+  - Add new payment method
+  - View saved payment methods
+  - Set default payment method
+  - Delete payment methods
+- **Order History Tab:**
+  - View all customer orders
+  - Verify order information displays correctly (order number, date, total, status)
+  - Expand order to view detailed information
+  - Verify order items display with correct quantities and prices
+  - Verify order summary calculations (subtotal, shipping, tax, total)
+  - Test Reorder button functionality
+  - Test Download Invoice button
+  - Verify newly created orders appear in history
 
 ### End-to-End Testing
 - Complete shopping workflow: Browse → Search → Add to Cart → Checkout → Confirmation
@@ -362,23 +449,55 @@ Here are some test cases you can automate:
 25. **Verify order summary shows correct items and total**
 26. **Click "Back to Home" and verify cart is cleared**
 
+### User Profile & Order Management
+27. **Open profile modal and verify all tabs load**
+28. **Verify profile information displays correctly**
+29. **Edit profile information and verify changes persist**
+30. **Test profile form field validation**
+31. **View payment methods tab**
+32. **Add new payment method**
+33. **Set payment method as default**
+34. **Delete payment method**
+35. **View order history tab**
+36. **Verify all orders display in order history**
+37. **Verify order summary shows correct order number, date, total**
+38. **Expand order and verify detailed information displays**
+39. **Verify order items show title, author, quantity, price**
+40. **Verify order summary calculations (subtotal, shipping, tax, total)**
+41. **Test Reorder button functionality**
+42. **Test Download Invoice button**
+43. **Create new order and verify it appears in order history**
+44. **Verify new order displays with "pending" status**
+
 ### API Testing
-27. **Test GET /api/books endpoint**
-28. **Test GET /api/books/:id endpoint**
-29. **Test POST /api/books with valid data**
-30. **Test POST /api/books with invalid data**
-31. **Test PUT /api/books/:id for updates**
-32. **Test DELETE /api/books/:id**
-33. **Test query parameters (?category=Fiction&author=...)**
-34. **Test API response codes (200, 201, 404, 400)**
+45. **Test GET /api/books endpoint**
+46. **Test GET /api/books/:id endpoint**
+47. **Test POST /api/books with valid data**
+48. **Test POST /api/books with invalid data**
+49. **Test PUT /api/books/:id for updates**
+50. **Test DELETE /api/books/:id**
+51. **Test query parameters (?category=Fiction&author=...)**
+52. **Test API response codes (200, 201, 404, 400)**
+53. **Test GET /api/users/:id/profile endpoint**
+54. **Test PUT /api/users/:id/profile endpoint**
+55. **Test GET /api/users/:id/orders endpoint**
+56. **Test POST /api/users/:id/orders endpoint**
+57. **Test GET /api/users/:id/payment-methods endpoint**
+58. **Test POST /api/users/:id/payment-methods endpoint**
+59. **Test DELETE /api/users/:id/payment-methods/:methodId endpoint**
 
 ### UI/UX Testing
-35. **Test responsive design on mobile devices**
-36. **Test responsive design on tablets**
-37. **Test responsive design on desktop**
-38. **Test button hover states**
-39. **Test form input focus states**
-40. **Test modal close functionality**
+60. **Test responsive design on mobile devices**
+61. **Test responsive design on tablets**
+62. **Test responsive design on desktop**
+63. **Test button hover states**
+64. **Test form input focus states**
+65. **Test modal close functionality**
+66. **Test profile modal opens and closes correctly**
+67. **Test tab switching in profile modal**
+68. **Test expandable order details in order history**
+69. **Verify all navigation links work correctly**
+70. **Test keyboard navigation and accessibility**
 
 ## 📄 License
 

@@ -6,11 +6,15 @@ import AddBookForm from './components/AddBookForm';
 import Cart from './components/Cart';
 import Checkout from './components/Checkout';
 import OrderConfirmation from './components/OrderConfirmation';
+import LoginPage from './components/LoginPage';
+import RoleProtected from './components/RoleProtected';
 import { useCart } from './context/CartContext';
+import { useAuth } from './context/AuthContext';
 import bookService from './services/bookService';
 import './App.css';
 
 function App() {
+  const { user, logout, restoreSession } = useAuth();
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [selectedBook, setSelectedBook] = useState(null);
@@ -27,10 +31,17 @@ function App() {
     author: ''
   });
 
-  // Fetch books on component mount
+  // Restore session on mount
   useEffect(() => {
-    fetchBooks();
-  }, []);
+    restoreSession();
+  }, [restoreSession]);
+
+  // Fetch books on component mount or when user logs in
+  useEffect(() => {
+    if (user) {
+      fetchBooks();
+    }
+  }, [user]);
 
   const fetchBooks = async (filterParams = {}) => {
     try {
@@ -119,48 +130,72 @@ function App() {
     setShowCart(false);
   };
 
+  // Show login page if not authenticated
+  if (!user) {
+    return <LoginPage />;
+  }
+
   return (
     <div className="app">
       <header className="app-header" role="banner">
         <div className="header-content">
-          <h1>📚 Bookstore</h1>
-          <p className="subtitle">Test Automation Practice Application</p>
+          <div className="header-title">
+            <h1>📚 Bookstore</h1>
+            <p className="subtitle">Test Automation Practice Application</p>
+          </div>
+          <div className="user-info">
+            <span className="user-role">{user.role.toUpperCase()}</span>
+            <span className="user-name">{user.fullName}</span>
+          </div>
         </div>
         <div className="header-buttons" role="toolbar" aria-label="Application controls">
+          <RoleProtected allowedRoles={['customer']}>
+            <button 
+              className="cart-btn"
+              onClick={() => setShowCart(!showCart)}
+              data-testid="cart-btn"
+              aria-label={`Shopping cart with ${getTotalItems()} items`}
+              aria-pressed={showCart}
+            >
+              🛒 Cart
+              {getTotalItems() > 0 && (
+                <span className="cart-badge" data-testid="cart-badge" aria-hidden="false">
+                  {getTotalItems()}
+                </span>
+              )}
+            </button>
+          </RoleProtected>
+          <RoleProtected allowedRoles={['admin', 'staff']}>
+            <button 
+              className="add-book-btn"
+              onClick={() => setShowAddForm(!showAddForm)}
+              aria-label={showAddForm ? 'Close add book form' : 'Open form to add a new book'}
+              aria-pressed={showAddForm}
+            >
+              {showAddForm ? 'Cancel' : '+ Add Book'}
+            </button>
+          </RoleProtected>
           <button 
-            className="cart-btn"
-            onClick={() => setShowCart(!showCart)}
-            data-testid="cart-btn"
-            aria-label={`Shopping cart with ${getTotalItems()} items`}
-            aria-pressed={showCart}
+            className="logout-btn"
+            onClick={logout}
+            aria-label="Logout from account"
           >
-            🛒 Cart
-            {getTotalItems() > 0 && (
-              <span className="cart-badge" data-testid="cart-badge" aria-hidden="false">
-                {getTotalItems()}
-              </span>
-            )}
-          </button>
-          <button 
-            className="add-book-btn"
-            onClick={() => setShowAddForm(!showAddForm)}
-            aria-label={showAddForm ? 'Close add book form' : 'Open form to add a new book'}
-            aria-pressed={showAddForm}
-          >
-            {showAddForm ? 'Cancel' : '+ Add Book'}
+            Logout
           </button>
         </div>
       </header>
 
       <main className="app-main" role="main" aria-label="Main content">
-        {showAddForm && (
-          <div className="add-book-section" role="region" aria-labelledby="add-form-title">
-            <AddBookForm 
-              onSubmit={handleAddBook}
-              onCancel={() => setShowAddForm(false)}
-            />
-          </div>
-        )}
+        <RoleProtected allowedRoles={['admin', 'staff']}>
+          {showAddForm && (
+            <div className="add-book-section" role="region" aria-labelledby="add-form-title">
+              <AddBookForm 
+                onSubmit={handleAddBook}
+                onCancel={() => setShowAddForm(false)}
+              />
+            </div>
+          )}
+        </RoleProtected>
 
         <SearchBar onSearch={handleSearch} />
 
@@ -201,7 +236,9 @@ function App() {
         )}
 
         {showCart && (
-          <Cart onClose={() => setShowCart(false)} onCheckout={handleCheckoutStart} />
+          <RoleProtected allowedRoles={['customer']}>
+            <Cart onClose={() => setShowCart(false)} onCheckout={handleCheckoutStart} />
+          </RoleProtected>
         )}
 
         {showCheckout && (

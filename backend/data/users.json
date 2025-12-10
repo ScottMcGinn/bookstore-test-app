@@ -1,0 +1,28 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "admin123",
+      "email": "admin@bookstore.com",
+      "role": "admin",
+      "fullName": "Admin User"
+    },
+    {
+      "id": 2,
+      "username": "staff",
+      "password": "staff123",
+      "email": "staff@bookstore.com",
+      "role": "staff",
+      "fullName": "Store Staff"
+    },
+    {
+      "id": 3,
+      "username": "customer",
+      "password": "customer123",
+      "email": "customer@bookstore.com",
+      "role": "customer",
+      "fullName": "John Customer"
+    }
+  ]
+}

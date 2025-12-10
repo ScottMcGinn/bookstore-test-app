@@ -27,9 +27,20 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 2rem;
 }
 
-.header-content h1 {
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
+  min-width: 300px;
+  gap: 3rem;
+}
+
+.header-title h1 {
   font-size: 2.5rem;
   margin-bottom: 0.5rem;
 }
@@ -39,6 +50,28 @@ body {
   opacity: 0.9;
 }
 
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.user-role {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: rgba(255,255,255,0.2);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+}
+
+.user-name {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
 .header-buttons {
   display: flex;
   gap: 1rem;
@@ -46,7 +79,8 @@ body {
 }
 
 .cart-btn,
-.add-book-btn {
+.add-book-btn,
+.logout-btn {
   background: white;
   color: #667eea;
   border: none;
@@ -57,6 +91,17 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
+}
+
+.logout-btn {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border: 2px solid white;
+}
+
+.logout-btn:hover {
+  background: white;
+  color: #667eea;
 }
 
 .cart-btn:hover,
@@ -183,3 +228,19 @@ body {
     padding: 1rem;
   }
 }
+
+.access-denied {
+  background: #fee;
+  border: 2px solid #c33;
+  color: #c33;
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  margin: 2rem;
+}
+
+.access-denied p {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
+

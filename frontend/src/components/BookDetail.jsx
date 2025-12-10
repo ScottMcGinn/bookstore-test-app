@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useCart } from '../context/CartContext';
 import './BookDetail.css';
 
 function BookDetail({ book, onClose, onDelete, onUpdate }) {
   const [isEditing, setIsEditing] = useState(false);
+  const { addToCart } = useCart();
   const [editForm, setEditForm] = useState({
     title: book.title,
     author: book.author,
@@ -96,6 +98,18 @@ function BookDetail({ book, onClose, onDelete, onUpdate }) {
                 <div className="detail-actions">
                   <button className="btn-edit" onClick={() => setIsEditing(true)}>
                     Edit Book
+                  </button>
+                  <button 
+                    className={`btn-add-to-cart ${book.stock > 0 ? '' : 'disabled'}`}
+                    onClick={() => {
+                      if (book.stock > 0) {
+                        addToCart(book, 1);
+                        alert(`Added to cart!`);
+                      }
+                    }}
+                    disabled={book.stock <= 0}
+                  >
+                    🛒 Add to Cart
                   </button>
                   <button className="btn-delete" onClick={() => onDelete(book.id)}>
                     Delete Book

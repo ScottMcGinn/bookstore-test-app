@@ -1,6 +1,8 @@
+import { useCart } from '../context/CartContext';
 import './BookList.css';
 
 function BookList({ books, onBookClick }) {
+  const { addToCart } = useCart();
   if (books.length === 0) {
     return (
       <div className="no-books">
@@ -44,6 +46,21 @@ function BookList({ books, onBookClick }) {
                 {book.stock > 0 ? `${book.stock} in stock` : 'Out of stock'}
               </span>
             </div>
+            
+            <button
+              className={`add-to-cart-btn ${book.stock > 0 ? '' : 'disabled'}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (book.stock > 0) {
+                  addToCart(book, 1);
+                  alert(`Added "${book.title}" to cart!`);
+                }
+              }}
+              disabled={book.stock <= 0}
+              data-testid={`add-to-cart-${book.id}`}
+            >
+              🛒 Add to Cart
+            </button>
           </div>
         </div>
       ))}

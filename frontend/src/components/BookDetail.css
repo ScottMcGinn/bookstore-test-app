@@ -180,7 +180,8 @@
 }
 
 .btn-edit,
-.btn-delete {
+.btn-delete,
+.btn-add-to-cart {
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: 8px;
@@ -198,6 +199,22 @@
 .btn-edit:hover {
   background: #5568d3;
   transform: translateY(-2px);
+}
+
+.btn-add-to-cart {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-add-to-cart:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-add-to-cart:disabled,
+.btn-add-to-cart.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .btn-delete {

@@ -1,0 +1,258 @@
+.confirmation-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+  animation: fadeIn 0.5s ease-out;
+  min-height: 100vh;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.confirmation-container {
+  width: 90%;
+  max-width: 600px;
+  animation: scaleUp 0.5s ease-out;
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.confirmation-content {
+  background: white;
+  border-radius: 16px;
+  padding: 50px 40px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.success-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: white;
+  font-size: 48px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 30px;
+  animation: bounce 0.6s ease-out;
+}
+
+@keyframes bounce {
+  0% {
+    transform: scale(0) rotateZ(-45deg);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.confirmation-content h1 {
+  margin: 0 0 15px 0;
+  font-size: 32px;
+  color: #333;
+  font-weight: 700;
+}
+
+.confirmation-message {
+  margin: 0 0 30px 0;
+  font-size: 16px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.order-details {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #555;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detail-value {
+  color: #333;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.detail-value.amount {
+  color: #667eea;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.detail-value.email {
+  color: #667eea;
+}
+
+.order-summary {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.order-summary h3 {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  color: #333;
+  font-weight: 700;
+}
+
+.items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+}
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  flex: 1;
+}
+
+.item-title {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.item-quantity {
+  font-size: 12px;
+  color: #999;
+}
+
+.item-subtotal {
+  font-weight: 700;
+  color: #667eea;
+  font-size: 14px;
+  min-width: 70px;
+  text-align: right;
+}
+
+.confirmation-message-box {
+  background: #edf2f7;
+  border-left: 4px solid #667eea;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.confirmation-message-box p {
+  margin: 0;
+  font-size: 13px;
+  color: #4a5568;
+  line-height: 1.6;
+}
+
+.btn-back-home {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.btn-back-home:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .confirmation-content {
+    padding: 40px 20px;
+  }
+
+  .confirmation-content h1 {
+    font-size: 26px;
+  }
+
+  .success-icon {
+    width: 70px;
+    height: 70px;
+    font-size: 40px;
+    margin-bottom: 20px;
+  }
+
+  .order-details,
+  .order-summary,
+  .confirmation-message-box {
+    padding: 15px;
+  }
+
+  .detail-label,
+  .detail-value {
+    font-size: 12px;
+  }
+
+  .detail-value.amount {
+    font-size: 16px;
+  }
+}

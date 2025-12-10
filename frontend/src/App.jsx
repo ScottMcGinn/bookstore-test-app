@@ -3,6 +3,10 @@ import BookList from './components/BookList';
 import BookDetail from './components/BookDetail';
 import SearchBar from './components/SearchBar';
 import AddBookForm from './components/AddBookForm';
+import Cart from './components/Cart';
+import Checkout from './components/Checkout';
+import OrderConfirmation from './components/OrderConfirmation';
+import { useCart } from './context/CartContext';
 import bookService from './services/bookService';
 import './App.css';
 
@@ -13,6 +17,10 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [showCart, setShowCart] = useState(false);
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [orderData, setOrderData] = useState(null);
+  const { getTotalItems } = useCart();
   const [filters, setFilters] = useState({
     search: '',
     category: '',
@@ -93,6 +101,24 @@ function App() {
     }
   };
 
+  const handleCheckoutStart = () => {
+    setShowCheckout(true);
+  };
+
+  const handleCheckoutClose = () => {
+    setShowCheckout(false);
+  };
+
+  const handleOrderComplete = (order) => {
+    setOrderData(order);
+    setShowCheckout(false);
+  };
+
+  const handleBackToHome = () => {
+    setOrderData(null);
+    setShowCart(false);
+  };
+
   return (
     <div className="app">
       <header className="app-header">
@@ -100,12 +126,26 @@ function App() {
           <h1>📚 Bookstore</h1>
           <p className="subtitle">Test Automation Practice Application</p>
         </div>
-        <button 
-          className="add-book-btn"
-          onClick={() => setShowAddForm(!showAddForm)}
-        >
-          {showAddForm ? 'Cancel' : '+ Add Book'}
-        </button>
+        <div className="header-buttons">
+          <button 
+            className="cart-btn"
+            onClick={() => setShowCart(!showCart)}
+            data-testid="cart-btn"
+          >
+            🛒 Cart
+            {getTotalItems() > 0 && (
+              <span className="cart-badge" data-testid="cart-badge">
+                {getTotalItems()}
+              </span>
+            )}
+          </button>
+          <button 
+            className="add-book-btn"
+            onClick={() => setShowAddForm(!showAddForm)}
+          >
+            {showAddForm ? 'Cancel' : '+ Add Book'}
+          </button>
+        </div>
       </header>
 
       <main className="app-main">
@@ -154,6 +194,18 @@ function App() {
             onDelete={handleDeleteBook}
             onUpdate={handleUpdateBook}
           />
+        )}
+
+        {showCart && (
+          <Cart onClose={() => setShowCart(false)} onCheckout={handleCheckoutStart} />
+        )}
+
+        {showCheckout && (
+          <Checkout onClose={handleCheckoutClose} onOrderComplete={handleOrderComplete} />
+        )}
+
+        {orderData && (
+          <OrderConfirmation order={orderData} onBackToHome={handleBackToHome} />
         )}
       </main>
 

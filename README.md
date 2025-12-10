@@ -13,10 +13,24 @@ This application is specifically designed for software testers to practice:
 
 ## ✨ Features
 
+### Frontend - Authentication & User Roles
+- **Login Page** - Beautiful gradient design with demo credentials displayed
+- **Three User Roles:**
+  - **Customer**: Browse books, add to cart, checkout, view orders
+  - **Store Staff**: Manage books (add/edit/delete), view analytics
+  - **Admin**: Full system access, manage staff and users
+- **Session Management** - User sessions persisted in localStorage
+- **Role-Based Access Control (RBAC)** - Features restricted by user role
+- **Demo Accounts** - Pre-configured test accounts for easy testing:
+  - Admin: `admin` / `admin123`
+  - Staff: `staff` / `staff123`
+  - Customer: `customer` / `customer123`
+
 ### Backend API
 - Full CRUD operations for books
 - Search and filter capabilities
 - Interactive Swagger documentation
+- Authentication endpoints (`/api/auth/login`, `/api/auth/logout`)
 - JSON file-based database (easy to reset)
 - Comprehensive error handling
 
@@ -24,12 +38,12 @@ This application is specifically designed for software testers to practice:
 - Modern React interface with responsive design (mobile, tablet, desktop)
 - Book browsing with grid layout
 - Advanced search and filtering by title, author, and category
-- Add, edit, and delete books
+- Add, edit, and delete books (staff/admin only)
 - Modal-based book details with full information display
 - Stock availability indicators
 
 ### Frontend - Shopping Cart
-- Add books to cart from book list or detail view
+- Add books to cart from book list or detail view (customers only)
 - Real-time cart badge showing item count
 - Side cart panel with:
   - Item quantity controls
@@ -39,7 +53,7 @@ This application is specifically designed for software testers to practice:
   - Continue shopping button
 
 ### Frontend - Checkout & Payment Processing
-- **Two-step checkout process:**
+- **Two-step checkout process (customers only):**
   1. **Shipping Information** - Collect customer details (name, email, phone, address, city, state, zip, country)
   2. **Payment Information** - Collect credit card details with smart formatting
 - **Payment Input Formatting:**
@@ -67,24 +81,31 @@ bookstore-test-app/
 ├── backend/              # Express.js API
 │   ├── config/          # Swagger configuration
 │   ├── data/            # JSON database
+│   │   ├── books.json   # Books database
+│   │   └── users.json   # User accounts database
 │   ├── routes/          # API routes
+│   │   ├── books.js     # Book CRUD endpoints
+│   │   └── auth.js      # Authentication endpoints
 │   └── server.js        # Main server file
 ├── frontend/            # React application
 │   ├── src/
 │   │   ├── components/  # React components
+│   │   │   ├── LoginPage.jsx         # Login/authentication page
 │   │   │   ├── BookList.jsx          # Book grid display
 │   │   │   ├── BookDetail.jsx        # Book details modal
 │   │   │   ├── SearchBar.jsx         # Search and filter
 │   │   │   ├── AddBookForm.jsx       # Add/edit book form
 │   │   │   ├── Cart.jsx              # Shopping cart panel
 │   │   │   ├── Checkout.jsx          # Checkout modal (2-step)
-│   │   │   └── OrderConfirmation.jsx # Order confirmation page
+│   │   │   ├── OrderConfirmation.jsx # Order confirmation page
+│   │   │   └── RoleProtected.jsx     # Role-based access wrapper
 │   │   ├── context/     # React Context
-│   │   │   └── CartContext.jsx       # Global cart state
+│   │   │   ├── CartContext.jsx       # Global cart state
+│   │   │   └── AuthContext.jsx       # Global authentication state
 │   │   ├── services/    # API service layer
 │   │   │   └── bookService.js        # API calls
 │   │   ├── App.jsx      # Main app component
-│   │   └── main.jsx     # Entry point with CartProvider
+│   │   └── main.jsx     # Entry point with AuthProvider & CartProvider
 │   └── vite.config.js   # Vite configuration
 └── README.md            # This file
 ```

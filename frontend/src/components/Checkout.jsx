@@ -1,11 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+import userService from '../services/userService';
 import './Checkout.css';
 
 function Checkout({ onClose, onOrderComplete }) {
   const { cartItems, getTotalPrice, clearCart } = useCart();
+  const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState('shipping'); // 'shipping' or 'payment'
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [userProfile, setUserProfile] = useState(null);
+  const [paymentMethods, setPaymentMethods] = useState([]);
 
   const [shippingForm, setShippingForm] = useState({
     firstName: '',
@@ -26,6 +31,54 @@ function Checkout({ onClose, onOrderComplete }) {
   });
 
   const [errors, setErrors] = useState({});
+
+  // Fetch user profile and payment methods on mount
+  useEffect(() => {
+    if (user?.id) {
+      fetchUserData();
+    }
+  }, [user]);
+
+  const fetchUserData = async () => {
+    try {
+      const profile = await userService.getProfile(user.id);
+      setUserProfile(profile);
+      
+      const paymentData = await userService.getPaymentMethods(user.id);
+      setPaymentMethods(paymentData.paymentMethods || []);
+    } catch (err) {
+      console.error('Error fetching user data:', err);
+    }
+  };
+
+  const handleUseStoredAddress = () => {
+    if (userProfile?.profile) {
+      const profile = userProfile.profile;
+      setShippingForm(prev => ({
+        ...prev,
+        firstName: profile.firstName || prev.firstName,
+        lastName: profile.lastName || prev.lastName,
+        email: profile.email || prev.email,
+        phone: profile.phone || prev.phone,
+        address: profile.address || prev.address,
+        city: profile.city || prev.city,
+        state: profile.state || prev.state,
+        zipCode: profile.zipCode || prev.zipCode,
+        country: profile.country || prev.country
+      }));
+      setErrors({});
+    }
+  };
+
+  const handleUseStoredPayment = (paymentMethod) => {
+    if (paymentMethod) {
+      setPaymentForm(prev => ({
+        ...prev,
+        cardNumber: '#### #### #### ' + paymentMethod.lastFour
+      }));
+      setErrors({});
+    }
+  };
 
   const handleShippingChange = (e) => {
     const { name, value } = e.target;
@@ -180,7 +233,19 @@ function Checkout({ onClose, onOrderComplete }) {
           <div className="checkout-body">
             {currentStep === 'shipping' && (
               <div className="checkout-section" id="shipping-section" role="tabpanel" aria-labelledby="shipping-label">
-                <h3 id="shipping-label">Shipping Address</h3>
+                <div className="section-header">
+                  <h3 id="shipping-label">Shipping Address</h3>
+                  {userProfile?.profile && (userProfile.profile.address || userProfile.profile.city) && (
+                    <button 
+                      type="button"
+                      className="btn-use-saved"
+                      onClick={handleUseStoredAddress}
+                      title="Populate form with your saved address"
+                    >
+                      📦 Use Saved Address
+                    </button>
+                  )}
+                </div>
 
                 <div className="form-row">
                   <div className="form-group">
@@ -345,7 +410,21 @@ function Checkout({ onClose, onOrderComplete }) {
 
             {currentStep === 'payment' && (
               <div className="checkout-section" id="payment-section" role="tabpanel" aria-labelledby="payment-label">
-                <h3 id="payment-label">Payment Information</h3>
+                <div className="section-header">
+                  <h3 id="payment-label">Payment Information</h3>
+                  {paymentMethods && paymentMethods.length > 0 && (
+                    <div className="saved-payment-options">
+                      <button 
+                        type="button"
+                        className="btn-use-saved"
+                        onClick={() => handleUseStoredPayment(paymentMethods[0])}
+                        title="Use your saved payment method"
+                      >
+                        💳 Use Saved Payment
+                      </button>
+                    </div>
+                  )}
+                </div>
 
                 <div className="form-group">
                   <label htmlFor="cardNumber">Credit Card Number *</label>

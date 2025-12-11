@@ -81,6 +81,8 @@ body {
 .profile-btn,
 .cart-btn,
 .add-book-btn,
+.stocktake-btn,
+.user-management-btn,
 .logout-btn {
   background: white;
   color: #667eea;
@@ -107,7 +109,9 @@ body {
 
 .profile-btn:hover,
 .cart-btn:hover,
-.add-book-btn:hover {
+.add-book-btn:hover,
+.stocktake-btn:hover,
+.user-management-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }

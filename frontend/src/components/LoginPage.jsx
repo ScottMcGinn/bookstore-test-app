@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import RegisterPage from './RegisterPage';
 import './LoginPage.css';
 
 function LoginPage() {
   const { login, loading, error } = useAuth();
+  const [showRegister, setShowRegister] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     password: ''
@@ -44,6 +46,10 @@ function LoginPage() {
     { username: 'staff', password: 'staff123', role: 'Store Staff', description: 'Manage books and view analytics' },
     { username: 'customer', password: 'customer123', role: 'Customer', description: 'Browse books and make purchases' }
   ];
+
+  if (showRegister) {
+    return <RegisterPage onBackToLogin={() => setShowRegister(false)} />;
+  }
 
   return (
     <div className="login-page">
@@ -100,6 +106,20 @@ function LoginPage() {
               {loading ? 'Logging in...' : 'Login'}
             </button>
           </form>
+
+          <div className="login-footer">
+            <p className="register-prompt">
+              For testing a new Customer can be added by clicking
+              <button 
+                type="button"
+                className="link-button"
+                onClick={() => setShowRegister(true)}
+                aria-label="Register new account"
+              >
+                here
+              </button>
+            </p>
+          </div>
 
           <div className="demo-info">
             <h3>Demo Accounts</h3>

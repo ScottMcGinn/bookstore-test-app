@@ -128,5 +128,18 @@
     "publisher": "Scholastic Press",
     "stock": 32,
     "coverImage": "https://covers.openlibrary.org/b/id/7883651-L.jpg"
+  },
+  {
+    "id": 11,
+    "title": "The Silent Patient",
+    "author": "Alex Michaelides",
+    "isbn": "978-0-06-288718-1",
+    "price": 18.99,
+    "category": "Mystery",
+    "description": "A woman shoots her husband in the face and then never speaks another word. An unforgettable psychological thriller.",
+    "publicationYear": 2019,
+    "publisher": "Celadon Books",
+    "stock": 20,
+    "coverImage": "https://example.com/silent-patient.jpg"
   }
 ]

@@ -27,6 +27,19 @@ const saveUsers = (users) => {
   }
 };
 
+// Get all users (for admin panel)
+router.get('/', (req, res) => {
+  const users = getUsers();
+  
+  // Return all users without passwords
+  const usersWithoutPasswords = users.map(user => {
+    const { password: _, ...userWithoutPassword } = user;
+    return userWithoutPassword;
+  });
+  
+  res.json(usersWithoutPasswords);
+});
+
 // Get user profile by ID
 router.get('/:id/profile', (req, res) => {
   const { id } = req.params;

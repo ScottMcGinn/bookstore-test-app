@@ -100,6 +100,52 @@
           }
         ]
       }
+    },
+    {
+      "id": "user_1765458695196_dqarj1w8x",
+      "username": "emmaj2024",
+      "password": "password456",
+      "email": "emma.johnson@example.com",
+      "fullName": "Emma Johnson",
+      "firstName": "Emma",
+      "lastName": "Johnson",
+      "role": "customer",
+      "profile": {
+        "avatar": null,
+        "bio": "",
+        "phone": "",
+        "address": "",
+        "city": "",
+        "state": "",
+        "zipCode": "",
+        "country": ""
+      },
+      "orders": [],
+      "paymentMethods": [],
+      "createdAt": "2025-12-11T13:11:35.196Z"
+    },
+    {
+      "id": "user_1765459934705_yyclozyip",
+      "username": "alexm2024",
+      "password": "staffpass123",
+      "email": "alex.mitchell@bookstore.com",
+      "fullName": "Alex Mitchell",
+      "firstName": "Alex",
+      "lastName": "Mitchell",
+      "role": "staff",
+      "profile": {
+        "avatar": null,
+        "bio": "",
+        "phone": "",
+        "address": "",
+        "city": "",
+        "state": "",
+        "zipCode": "",
+        "country": ""
+      },
+      "orders": [],
+      "paymentMethods": [],
+      "createdAt": "2025-12-11T13:32:14.705Z"
     }
   ]
 }

@@ -9,6 +9,8 @@ import OrderConfirmation from './components/OrderConfirmation';
 import LoginPage from './components/LoginPage';
 import RoleProtected from './components/RoleProtected';
 import CustomerProfile from './components/CustomerProfile';
+import Stocktake from './components/Stocktake';
+import UserManagement from './components/UserManagement';
 import { useCart } from './context/CartContext';
 import { useAuth } from './context/AuthContext';
 import bookService from './services/bookService';
@@ -26,6 +28,8 @@ function App() {
   const [showCart, setShowCart] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [showStocktake, setShowStocktake] = useState(false);
+  const [showUserManagement, setShowUserManagement] = useState(false);
   const [orderData, setOrderData] = useState(null);
   const { getTotalItems } = useCart();
   const [filters, setFilters] = useState({
@@ -236,6 +240,26 @@ function App() {
               {showAddForm ? 'Cancel' : '+ Add Book'}
             </button>
           </RoleProtected>
+          <RoleProtected allowedRoles={['admin', 'staff']} fallback={null}>
+            <button 
+              className="stocktake-btn"
+              onClick={() => setShowStocktake(!showStocktake)}
+              aria-label="View stock levels"
+              aria-pressed={showStocktake}
+            >
+              📊 Stocktake
+            </button>
+          </RoleProtected>
+          <RoleProtected allowedRoles={['admin']} fallback={null}>
+            <button 
+              className="user-management-btn"
+              onClick={() => setShowUserManagement(!showUserManagement)}
+              aria-label="Manage users"
+              aria-pressed={showUserManagement}
+            >
+              👥 Users
+            </button>
+          </RoleProtected>
           <button 
             className="logout-btn"
             onClick={logout}
@@ -269,6 +293,22 @@ function App() {
                 onSubmit={handleAddBook}
                 onCancel={() => setShowAddForm(false)}
               />
+            </div>
+          )}
+        </RoleProtected>
+
+        <RoleProtected allowedRoles={['admin', 'staff']} fallback={null}>
+          {showStocktake && (
+            <div className="stocktake-section" role="region" aria-labelledby="stocktake-title">
+              <Stocktake />
+            </div>
+          )}
+        </RoleProtected>
+
+        <RoleProtected allowedRoles={['admin']} fallback={null}>
+          {showUserManagement && (
+            <div className="user-management-section" role="region" aria-labelledby="user-management-title">
+              <UserManagement />
             </div>
           )}
         </RoleProtected>

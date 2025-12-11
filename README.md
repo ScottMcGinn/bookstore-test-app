@@ -389,12 +389,14 @@ To reset the database to its initial state, restore the original content of `bac
 - **Express.js** - Web framework
 - **Swagger UI** - API documentation
 - **CORS** - Cross-origin resource sharing
+- **File System (fs)** - JSON data persistence
 
 ### Frontend
 - **React 18** - UI library with Hooks
-- **React Context API** - State management
+- **React Context API** - State management (Cart, Auth)
 - **Vite** - Build tool and dev server
 - **Vanilla CSS** - Styling with responsive design
+- **Local Storage** - Session persistence
 
 ## 🐛 Common Issues
 
@@ -415,89 +417,201 @@ To reset the database to its initial state, restore the original content of `bac
 
 ## 📝 Test Automation Ideas
 
-Here are some test cases you can automate:
+Here are comprehensive test cases you can automate:
 
-### Book Management
-1. **Verify all books load correctly on initial page load**
-2. **Test search functionality with various keywords**
-3. **Test category filtering with multiple categories**
-4. **Test author filtering**
-5. **Add a new book and verify it appears in the list**
-6. **Edit a book and verify changes persist**
-7. **Delete a book and verify it's removed**
-8. **Test form validation (empty fields, invalid data)**
+### Authentication & Authorization
+1. **Test login with valid credentials**
+2. **Test login with invalid credentials**
+3. **Test login form validation (empty fields)**
+4. **Test user registration with valid data**
+5. **Test registration form validation (empty fields, invalid email)**
+6. **Test password confirmation matching in registration**
+7. **Test session persistence after page refresh**
+8. **Test logout functionality**
+9. **Verify customer role sees customer features only**
+10. **Verify staff role sees staff features (books + stock management)**
+11. **Verify admin role sees all features**
+12. **Test non-authenticated users are redirected to login**
+13. **Test role-protected features are hidden based on user role**
+
+### Book Management & Catalog
+14. **Verify all books load correctly on initial page load**
+15. **Test search functionality with various keywords**
+16. **Test category filtering with multiple categories**
+17. **Test author filtering**
+18. **Test combined search + category filters**
+19. **Verify books count updates with filters**
+20. **Add a new book with complete details**
+21. **Verify newly added book appears in list**
+22. **Edit a book and verify changes persist**
+23. **Delete a book and verify it's removed from list**
+24. **Test book form validation (empty required fields)**
+25. **Test invalid price input (negative numbers)**
+26. **Test invalid stock input (negative numbers)**
+27. **Verify book details modal opens correctly**
+28. **Verify book details display all information**
 
 ### Shopping Cart
-9. **Add single book to cart and verify badge updates**
-10. **Add multiple different books to cart**
-11. **Increase quantity of item in cart**
-12. **Remove item from cart and verify total updates**
-13. **Clear entire cart**
-14. **Verify cart items persist when navigating away and back**
-15. **Verify total price calculations are accurate**
+29. **Add single book to cart and verify badge updates**
+30. **Verify cart badge shows correct item count**
+31. **Add multiple different books to cart**
+32. **Increase quantity of item in cart**
+33. **Decrease quantity of item in cart**
+34. **Set specific quantity in cart**
+35. **Remove item from cart and verify total updates**
+36. **Clear entire cart**
+37. **Verify cart items persist when navigating away and back**
+38. **Verify cart subtotal is calculated correctly**
+39. **Verify cart shows correct number of items**
+40. **Verify cart button shows/hides based on state**
 
 ### Checkout & Payment
-16. **Complete full checkout flow from cart to confirmation**
-17. **Validate shipping form required field validation**
-18. **Test invalid email format rejection**
-19. **Verify credit card number formatting (spaces every 4 digits)**
-20. **Verify expiry date formatting (MM/YY)**
-21. **Verify CVV only accepts digits**
-22. **Test invalid credit card length rejection**
-23. **Complete order and verify confirmation page displays**
-24. **Verify order number is generated**
-25. **Verify order summary shows correct items and total**
-26. **Click "Back to Home" and verify cart is cleared**
+41. **Complete full checkout flow from cart to confirmation**
+42. **Validate shipping form required field validation**
+43. **Test invalid email format rejection**
+44. **Verify street address is required**
+45. **Verify city is required**
+46. **Verify state is required**
+47. **Verify zip code is required**
+48. **Verify country is required**
+49. **Verify credit card number formatting (spaces every 4 digits)**
+50. **Verify expiry date formatting (MM/YY)**
+51. **Verify CVV only accepts digits**
+52. **Test invalid credit card number rejection**
+53. **Test invalid credit card length rejection**
+54. **Test expired credit card rejection**
+55. **Verify CVV length validation (3-4 digits)**
+56. **Complete order and verify confirmation page displays**
+57. **Verify order ID is generated and displayed**
+58. **Verify order date is displayed**
+59. **Verify order summary shows correct items and total**
+60. **Verify order total is calculated correctly (items + shipping + tax)**
+61. **Click "Back to Home" and verify cart is cleared**
 
 ### User Profile & Order Management
-27. **Open profile modal and verify all tabs load**
-28. **Verify profile information displays correctly**
-29. **Edit profile information and verify changes persist**
-30. **Test profile form field validation**
-31. **View payment methods tab**
-32. **Add new payment method**
-33. **Set payment method as default**
-34. **Delete payment method**
-35. **View order history tab**
-36. **Verify all orders display in order history**
-37. **Verify order summary shows correct order number, date, total**
-38. **Expand order and verify detailed information displays**
-39. **Verify order items show title, author, quantity, price**
-40. **Verify order summary calculations (subtotal, shipping, tax, total)**
-41. **Test Reorder button functionality**
-42. **Test Download Invoice button**
-43. **Create new order and verify it appears in order history**
-44. **Verify new order displays with "pending" status**
+62. **Login and open profile modal**
+63. **Verify profile information displays correctly**
+64. **Edit profile first name and verify changes persist**
+65. **Edit profile last name and verify changes persist**
+66. **Edit profile email and verify changes persist**
+67. **Test profile form field validation (required fields)**
+68. **View payment methods tab**
+69. **Add new payment method with valid data**
+70. **Verify newly added payment method appears in list**
+71. **Set payment method as default**
+72. **Verify default payment method is marked as default**
+73. **Delete payment method**
+74. **Verify deleted payment method is removed from list**
+75. **View order history tab**
+76. **Verify all orders display in order history**
+77. **Verify order summary shows order number, date, total**
+78. **Expand order and verify detailed information displays**
+79. **Verify order items show title, author, quantity, price**
+80. **Verify order status is displayed correctly**
+81. **Verify order summary calculations (subtotal, tax, shipping, total)**
+82. **Test Download Invoice button functionality**
+83. **Create new order and verify it appears in order history**
+84. **Verify new order displays with "pending" status**
+85. **Test Reorder button functionality**
+86. **Verify modal close functionality**
+87. **Verify tab switching in profile modal**
+
+### Stock Management (Staff/Admin)
+88. **View stocktake page**
+89. **Verify all books display with current stock levels**
+90. **Filter books in stocktake view**
+91. **Verify stock levels update when books are added**
+92. **Verify stock levels update when books are sold**
+93. **View low stock warnings (if implemented)**
+94. **Sort by stock level**
+
+### User Management (Admin Only)
+95. **Access user management page**
+96. **View all users in system**
+97. **Filter users by role**
+98. **View user details**
+99. **Add new staff member**
+100. **Verify new staff member is created with correct role**
+101. **Edit user information**
+102. **Deactivate user account**
+103. **View user order history**
 
 ### API Testing
-45. **Test GET /api/books endpoint**
-46. **Test GET /api/books/:id endpoint**
-47. **Test POST /api/books with valid data**
-48. **Test POST /api/books with invalid data**
-49. **Test PUT /api/books/:id for updates**
-50. **Test DELETE /api/books/:id**
-51. **Test query parameters (?category=Fiction&author=...)**
-52. **Test API response codes (200, 201, 404, 400)**
-53. **Test GET /api/users/:id/profile endpoint**
-54. **Test PUT /api/users/:id/profile endpoint**
-55. **Test GET /api/users/:id/orders endpoint**
-56. **Test POST /api/users/:id/orders endpoint**
-57. **Test GET /api/users/:id/payment-methods endpoint**
-58. **Test POST /api/users/:id/payment-methods endpoint**
-59. **Test DELETE /api/users/:id/payment-methods/:methodId endpoint**
+104. **Test GET /api/books endpoint**
+105. **Test GET /api/books/:id endpoint**
+106. **Test POST /api/books with valid data**
+107. **Test POST /api/books with invalid data**
+108. **Test PUT /api/books/:id for updates**
+109. **Test DELETE /api/books/:id**
+110. **Test query parameters (?category=Fiction&author=...)**
+111. **Test API response codes (200, 201, 404, 400)**
+112. **Test GET /api/auth/login with valid credentials**
+113. **Test POST /api/auth/login with invalid credentials**
+114. **Test POST /api/auth/register**
+115. **Test GET /api/users/:id/profile endpoint**
+116. **Test PUT /api/users/:id/profile endpoint**
+117. **Test GET /api/users/:id/orders endpoint**
+118. **Test POST /api/users/:id/orders endpoint**
+119. **Test GET /api/users/:id/payment-methods endpoint**
+120. **Test POST /api/users/:id/payment-methods endpoint**
+121. **Test DELETE /api/users/:id/payment-methods/:methodId endpoint**
+122. **Test API authentication (invalid/missing tokens)**
+123. **Test API rate limiting (if implemented)**
 
 ### UI/UX Testing
-60. **Test responsive design on mobile devices**
-61. **Test responsive design on tablets**
-62. **Test responsive design on desktop**
-63. **Test button hover states**
-64. **Test form input focus states**
-65. **Test modal close functionality**
-66. **Test profile modal opens and closes correctly**
-67. **Test tab switching in profile modal**
-68. **Test expandable order details in order history**
-69. **Verify all navigation links work correctly**
-70. **Test keyboard navigation and accessibility**
+124. **Test responsive design on mobile devices (320px width)**
+125. **Test responsive design on tablets (768px width)**
+126. **Test responsive design on desktop (1024px+ width)**
+127. **Test button hover states**
+128. **Test form input focus states**
+129. **Test modal animation and transitions**
+130. **Test profile modal opens and closes correctly**
+131. **Test cart modal opens and closes correctly**
+132. **Test checkout modal opens and closes correctly**
+133. **Test dropdown menus work correctly**
+134. **Test expandable order details in order history**
+135. **Verify all navigation links work correctly**
+136. **Test keyboard navigation and accessibility**
+137. **Test tab key navigation through forms**
+138. **Test Enter key submits forms**
+139. **Test Escape key closes modals**
+140. **Verify ARIA labels on all interactive elements**
+141. **Test screen reader announcements for cart updates**
+142. **Test form error messages display correctly**
+143. **Test success messages display after actions**
+144. **Verify loading spinner displays during API calls**
+
+### Edge Cases & Error Handling
+145. **Test behavior with network disconnection**
+146. **Test behavior with slow network**
+147. **Test simultaneous actions (add to cart while ordering)**
+148. **Test duplicate book additions**
+149. **Test cart with no items checkout attempt**
+150. **Test user logout during checkout**
+151. **Test browser back button during checkout**
+152. **Test invalid data in localStorage**
+153. **Test empty search results**
+154. **Test special characters in search**
+155. **Test very long book titles/descriptions**
+156. **Test concurrent user actions**
+157. **Test database update conflicts**
+
+### Performance Testing
+158. **Verify page load time with full book catalog**
+159. **Verify search response time**
+160. **Verify cart updates are responsive**
+161. **Verify modal open/close animations are smooth**
+162. **Monitor memory usage during extended session**
+163. **Test with large number of orders in history**
+
+### Security Testing
+164. **Test SQL injection in search field**
+165. **Test XSS attempts in form fields**
+166. **Verify sensitive data not exposed in console**
+167. **Verify payment data not logged or exposed**
+168. **Test CORS restrictions**
+169. **Test unauthorized API access**
+170. **Verify session tokens are secure**
 
 ## 📄 License
 

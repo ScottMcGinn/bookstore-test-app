@@ -32,7 +32,63 @@ const generateId = () => {
   return `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 };
 
-// Register endpoint
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Register a new user account
+ *     description: Create a new customer account with username, password, and email
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *               - email
+ *               - firstName
+ *               - lastName
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 minLength: 3
+ *                 example: johndoe
+ *               password:
+ *                 type: string
+ *                 minLength: 6
+ *                 example: password123
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: john@example.com
+ *               firstName:
+ *                 type: string
+ *                 example: John
+ *               lastName:
+ *                 type: string
+ *                 example: Doe
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *                 message:
+ *                   type: string
+ *       400:
+ *         description: Invalid input or user already exists
+ *       500:
+ *         description: Server error
+ */
 router.post('/register', (req, res) => {
   const { username, password, email, firstName, lastName } = req.body;
 
@@ -101,7 +157,50 @@ router.post('/register', (req, res) => {
   }
 });
 
-// Login endpoint
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: Login to user account
+ *     description: Authenticate with username and password
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 example: customer
+ *               password:
+ *                 type: string
+ *                 example: customer123
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *                 message:
+ *                   type: string
+ *       400:
+ *         description: Missing credentials
+ *       401:
+ *         description: Invalid username or password
+ *       500:
+ *         description: Server error
+ */
 router.post('/login', (req, res) => {
   const { username, password } = req.body;
 
@@ -124,6 +223,64 @@ router.post('/login', (req, res) => {
     message: `Welcome, ${user.fullName}!`
   });
 });
+
+/**
+ * @swagger
+ * /api/auth/add-staff:
+ *   post:
+ *     summary: Create a new staff member (Admin only)
+ *     description: Add a new staff account with staff role
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *               - email
+ *               - firstName
+ *               - lastName
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 minLength: 3
+ *                 example: newstaff
+ *               password:
+ *                 type: string
+ *                 minLength: 6
+ *                 example: staff123
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: staff@example.com
+ *               firstName:
+ *                 type: string
+ *                 example: Jane
+ *               lastName:
+ *                 type: string
+ *                 example: Smith
+ *     responses:
+ *       201:
+ *         description: Staff member created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *                 message:
+ *                   type: string
+ *       400:
+ *         description: Invalid input or user already exists
+ *       500:
+ *         description: Server error
+ */
 
 // Add Staff endpoint (admin only)
 router.post('/add-staff', (req, res) => {
@@ -194,7 +351,26 @@ router.post('/add-staff', (req, res) => {
   }
 });
 
-// Logout endpoint
+/**
+ * @swagger
+ * /api/auth/logout:
+ *   post:
+ *     summary: Logout user
+ *     description: End user session
+ *     tags: [Authentication]
+ *     responses:
+ *       200:
+ *         description: Logout successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ */
 router.post('/logout', (req, res) => {
   res.json({
     success: true,
@@ -202,7 +378,21 @@ router.post('/logout', (req, res) => {
   });
 });
 
-// Get current user (for session verification)
+/**
+ * @swagger
+ * /api/auth/me:
+ *   get:
+ *     summary: Get current user info
+ *     description: Retrieve authenticated user information
+ *     tags: [Authentication]
+ *     responses:
+ *       200:
+ *         description: User information
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ */
 router.get('/me', (req, res) => {
   // In a real app, this would verify a token
   // For now, we'll just return a message

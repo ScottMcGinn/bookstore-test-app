@@ -27,7 +27,25 @@ const saveUsers = (users) => {
   }
 };
 
-// Get all users (for admin panel)
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Get all users
+ *     description: Retrieve list of all users (admin only)
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: List of users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Server error
+ */
 router.get('/', (req, res) => {
   const users = getUsers();
   
@@ -40,7 +58,32 @@ router.get('/', (req, res) => {
   res.json(usersWithoutPasswords);
 });
 
-// Get user profile by ID
+/**
+ * @swagger
+ * /api/users/{id}/profile:
+ *   get:
+ *     summary: Get user profile
+ *     description: Retrieve user profile information by user ID
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: User profile
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Server error
+ */
 router.get('/:id/profile', (req, res) => {
   const { id } = req.params;
   const users = getUsers();
@@ -55,7 +98,66 @@ router.get('/:id/profile', (req, res) => {
   res.json(userWithoutPassword);
 });
 
-// Update user profile
+/**
+ * @swagger
+ * /api/users/{id}/profile:
+ *   put:
+ *     summary: Update user profile
+ *     description: Update user profile information
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *               lastName:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               phone:
+ *                 type: string
+ *               address:
+ *                 type: object
+ *                 properties:
+ *                   street:
+ *                     type: string
+ *                   city:
+ *                     type: string
+ *                   state:
+ *                     type: string
+ *                   zipCode:
+ *                     type: string
+ *                   country:
+ *                     type: string
+ *     responses:
+ *       200:
+ *         description: Profile updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Server error
+ */
 router.put('/:id/profile', (req, res) => {
   const { id } = req.params;
   const { firstName, lastName, email, phone, address } = req.body;
@@ -93,7 +195,41 @@ router.put('/:id/profile', (req, res) => {
   });
 });
 
-// Get order history
+/**
+ * @swagger
+ * /api/users/{id}/orders:
+ *   get:
+ *     summary: Get user order history
+ *     description: Retrieve all orders for a specific user
+ *     tags: [Orders]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: User order history
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 userId:
+ *                   type: string
+ *                 userName:
+ *                   type: string
+ *                 orders:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Order'
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Server error
+ */
 router.get('/:id/orders', (req, res) => {
   const { id } = req.params;
   const users = getUsers();
@@ -111,7 +247,67 @@ router.get('/:id/orders', (req, res) => {
   });
 });
 
-// Add order to order history
+/**
+ * @swagger
+ * /api/users/{id}/orders:
+ *   post:
+ *     summary: Create a new order
+ *     description: Add a new order to user's order history
+ *     tags: [Orders]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - orderId
+ *               - orderDate
+ *               - total
+ *               - items
+ *             properties:
+ *               orderId:
+ *                 type: string
+ *               orderDate:
+ *                 type: string
+ *                 format: date-time
+ *               total:
+ *                 type: number
+ *               items:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *               status:
+ *                 type: string
+ *                 enum: [pending, processing, shipped, delivered]
+ *               shippingAddress:
+ *                 type: object
+ *     responses:
+ *       200:
+ *         description: Order created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 order:
+ *                   $ref: '#/components/schemas/Order'
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Server error
+ */
 router.post('/:id/orders', (req, res) => {
   const { id } = req.params;
   const { orderId, orderDate, total, items, status, shippingAddress } = req.body;
@@ -164,7 +360,39 @@ router.post('/:id/orders', (req, res) => {
   });
 });
 
-// Get payment methods
+/**
+ * @swagger
+ * /api/users/{id}/payment-methods:
+ *   get:
+ *     summary: Get user payment methods
+ *     description: Retrieve all saved payment methods for a user
+ *     tags: [Payment Methods]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: User payment methods
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 userId:
+ *                   type: string
+ *                 paymentMethods:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/PaymentMethod'
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Server error
+ */
 router.get('/:id/payment-methods', (req, res) => {
   const { id } = req.params;
   const users = getUsers();
@@ -181,7 +409,61 @@ router.get('/:id/payment-methods', (req, res) => {
   });
 });
 
-// Save payment method
+/**
+ * @swagger
+ * /api/users/{id}/payment-methods:
+ *   post:
+ *     summary: Save a new payment method
+ *     description: Add a new payment method to user's saved methods
+ *     tags: [Payment Methods]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               type:
+ *                 type: string
+ *                 example: credit_card
+ *               lastFour:
+ *                 type: string
+ *                 example: "1234"
+ *               brand:
+ *                 type: string
+ *                 example: Visa
+ *               expiryMonth:
+ *                 type: string
+ *               expiryYear:
+ *                 type: string
+ *               isDefault:
+ *                 type: boolean
+ *     responses:
+ *       200:
+ *         description: Payment method saved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 paymentMethod:
+ *                   $ref: '#/components/schemas/PaymentMethod'
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Server error
+ */
 router.post('/:id/payment-methods', (req, res) => {
   const { id } = req.params;
   const { type, lastFour, brand, expiryMonth, expiryYear, isDefault } = req.body;
@@ -244,7 +526,43 @@ router.post('/:id/payment-methods', (req, res) => {
   });
 });
 
-// Delete payment method
+/**
+ * @swagger
+ * /api/users/{id}/payment-methods/{paymentMethodId}:
+ *   delete:
+ *     summary: Delete a payment method
+ *     description: Remove a payment method from user's saved methods
+ *     tags: [Payment Methods]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *       - in: path
+ *         name: paymentMethodId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Payment Method ID
+ *     responses:
+ *       200:
+ *         description: Payment method deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *       404:
+ *         description: User or payment method not found
+ *       500:
+ *         description: Server error
+ */
 router.delete('/:id/payment-methods/:paymentMethodId', (req, res) => {
   const { id, paymentMethodId } = req.params;
   const users = getUsers();

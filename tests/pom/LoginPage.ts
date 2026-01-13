@@ -12,7 +12,7 @@ export class LoginPage {
   errorMessage = '.error-message';
 
   async goto() {
-    await this.page.goto('http://localhost:8080/login');
+    await this.page.goto('http://localhost:5173/login');
   }
 
   async login(username: string, password: string) {

@@ -12,7 +12,7 @@ export class BookListPage {
   addToCartButton = '.add-to-cart-btn';
 
   async goto() {
-    await this.page.goto('http://localhost:8080/books');
+    await this.page.goto('http://localhost:5173/books');
   }
 
   async searchBook(title: string) {

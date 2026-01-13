@@ -67,12 +67,14 @@ jobs:
 
       - name: List test files
         run: ls -R tests
+        working-directory: .
   
       - name: Install Playwright
         run: npx playwright install --with-deps
 
       - name: Run Playwright tests
         run: npx playwright test
+        working-directory: .
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:

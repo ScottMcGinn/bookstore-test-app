@@ -52,7 +52,7 @@ jobs:
         working-directory: frontend
 
       - name: Start frontend server
-        run: npm run preview &
+        run: npm run preview -- --port 5173 &
         working-directory: frontend
 
       - name: Wait for frontend to be ready
@@ -60,7 +60,7 @@ jobs:
           n=0
           until [ "$n" -ge 10 ]
           do
-            nc -z localhost 8080 && break
+            nc -z localhost 5173 && break
             n=$((n+1))
             sleep 2
           done

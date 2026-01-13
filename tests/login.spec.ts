@@ -3,7 +3,7 @@ import { LoginPage } from './pom/LoginPage';
 
 test.describe('Tests to check that logins work', () => {
 
-    test('Check Customer Login @critical', async ({ page }) => {
+test('Check Customer Login', { tag: '@critical' }, async ({ page }) => {
         const login = new LoginPage(page);
 
         await page.goto('/');

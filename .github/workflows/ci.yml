@@ -9,9 +9,6 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./backend
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -21,65 +18,41 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install backend dependencies
+      - name: Install root dependencies
         run: npm install
 
-      - name: Run backend tests (if any)
-        run: |
-          if [ -f package.json ] && npm run | grep -q test; then npm test; else echo "No backend tests"; fi
-
-      - name: Start backend server
-        run: npm start &
-        env:
-          NODE_ENV: test
-
-      - name: Wait for backend to be ready
-        run: |
-          n=0
-          until [ "$n" -ge 10 ]
-          do
-            nc -z localhost 3001 && break
-            n=$((n+1))
-            sleep 2
-          done
+      - name: Install backend dependencies
+        run: npm install
+        working-directory: ./backend
 
       - name: Install frontend dependencies
         run: npm install
-        working-directory: frontend
+        working-directory: ./frontend
 
-      - name: Build frontend
-        run: npm run build
-        working-directory: frontend
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Start backend server
+        run: npm start &
+        working-directory: ./backend
 
       - name: Start frontend server
-        run: npm run preview -- --port 5173 &
-        working-directory: frontend
+        run: npm run dev &
+        working-directory: ./frontend
 
-      - name: Wait for frontend to be ready
+      - name: Wait for servers to be ready
         run: |
-          n=0
-          until [ "$n" -ge 10 ]
-          do
-            nc -z localhost 5173 && break
-            n=$((n+1))
-            sleep 2
-          done
-
-      - name: List test files
-        run: ls -R tests
-        working-directory: .
-  
-      - name: Install Playwright dependencies
-        run: npm install --legacy-peer-deps
-        working-directory: .
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+          echo "Waiting for backend..."
+          npx wait-on http://localhost:3001 --timeout 60000
+          echo "Waiting for frontend..."
+          npx wait-on http://localhost:5173 --timeout 60000
 
       - name: Run Playwright tests
         run: npx playwright test
-        working-directory: .
+
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
           name: playwright-report
-          path: playwright-report
+          path: playwright-report/
+          retention-days: 30

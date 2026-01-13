@@ -34,14 +34,14 @@ jobs:
           NODE_ENV: test
 
       - name: Wait for backend to be ready
-          run: |
-            n=0
-            until [ "$n" -ge 10 ]
-            do
-              nc -z localhost 3001 && break
-              n=$((n+1))
-              sleep 2
-            done
+        run: |
+          n=0
+          until [ "$n" -ge 10 ]
+          do
+            nc -z localhost 3001 && break
+            n=$((n+1))
+            sleep 2
+          done
 
       - name: Install frontend dependencies
         run: npm install

@@ -80,7 +80,7 @@ export default defineConfig({
       timeout: 120000,
     },
     {
-      command: 'npm run dev',
+      command: process.env.CI ? 'npx vite preview --port 5173 --strictPort' : 'npm run dev',
       cwd: './frontend',
       url: 'http://localhost:5173',
       reuseExistingServer: !process.env.CI,

@@ -11,10 +11,6 @@ export class LoginPage {
   loginButton = 'button[type="submit"]';
   errorMessage = '.error-message';
 
-  async goto() {
-    await this.page.goto('http://localhost:5173/login');
-  }
-
   async login(username: string, password: string) {
     await this.page.fill(this.usernameInput, username);
     await this.page.fill(this.passwordInput, password);

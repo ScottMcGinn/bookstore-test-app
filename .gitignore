@@ -38,9 +38,18 @@ coverage/
 *.temp
 
 # Screenshots and media
+DEPLOYMENT_STEPS.md
+AWS_DEPLOYMENT_GUIDE.md
 *.png
 *.jpg
 *.jpeg
 *.gif
 *.bmp
 screenshots/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/

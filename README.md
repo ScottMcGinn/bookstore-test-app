@@ -14,24 +14,17 @@ This application is specifically designed for software testers to practice:
 ## ✨ Features
 
 ### Frontend - Authentication & User Roles
-- **Login Page** - Beautiful gradient design with demo credentials displayed
-- **Three User Roles:**
   - **Customer**: Browse books, add to cart, checkout, view orders
   - **Store Staff**: Manage books (add/edit/delete), view analytics
   - **Admin**: Full system access, manage staff and users
-- **Session Management** - User sessions persisted in localStorage
-- **Role-Based Access Control (RBAC)** - Features restricted by user role
-- **Demo Accounts** - Pre-configured test accounts for easy testing:
   - Admin: `admin` / `admin123`
   - Staff: `staff` / `staff123`
   - Customer: `customer` / `customer123`
 
+
 ### Backend API
 - Full CRUD operations for books
 - Search and filter capabilities
-- Interactive Swagger documentation
-- Authentication endpoints (`/api/auth/login`, `/api/auth/logout`)
-- JSON file-based database (easy to reset)
 - Comprehensive error handling
 
 ### Frontend - Book Management

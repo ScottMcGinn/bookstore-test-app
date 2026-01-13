@@ -65,8 +65,8 @@ jobs:
             sleep 2
           done
 
-        - name: List test files
-          run: ls -R tests
+      - name: List test files
+        run: ls -R tests
   
       - name: Install Playwright
         run: npx playwright install --with-deps

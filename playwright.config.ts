@@ -78,13 +78,17 @@ export default defineConfig({
       url: 'http://localhost:3001',
       reuseExistingServer: !process.env.CI,
       timeout: 120000,
+      stdout: 'pipe',
+      stderr: 'pipe',
     },
     {
-      command: process.env.CI ? 'npx vite preview --port 5173 --strictPort' : 'npm run dev',
+      command: process.env.CI ? 'npx vite preview --port 5173 --strictPort --host' : 'npm run dev',
       cwd: './frontend',
       url: 'http://localhost:5173',
       reuseExistingServer: !process.env.CI,
       timeout: 120000,
+      stdout: 'pipe',
+      stderr: 'pipe',
     },
   ],
 });

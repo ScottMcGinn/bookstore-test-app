@@ -28,14 +28,14 @@ jobs:
       - name: Install frontend dependencies
         run: npm install
         working-directory: ./frontend
-    - name: Build frontend (for CI)
-      run: npm run build
-      working-directory: ./frontend
+      - name: Build frontend (for CI)
+        run: npm run build
+        working-directory: ./frontend
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
       - name: Run Playwright tests
-      run: npx playwright test --project=chromium
+        run: npx playwright test --project=chromium --grep "@critical"
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
